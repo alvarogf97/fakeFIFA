@@ -138,11 +138,11 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        if(timer !=null && timer.getTime()<=3){
+        if(timer !=null && timer.getTime()<=600){
             timer.addTime(tpf);
         }
         
-        if(timer !=null && timer.getTime()>3 && !end){
+        if(timer !=null && timer.getTime()>600 && !end){
             rootNode.detachAllChildren();
             timer.dettachFromParent();
             matcher.finishGame();
