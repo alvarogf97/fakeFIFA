@@ -24,17 +24,19 @@ public class Timer {
     
     private BitmapFont guiFont;
     private BitmapText text;
+    private Node guiNode;
     
     public Timer(AssetManager assetManager, AppSettings settings, Node guiNode){
         
         this.time = 0;
+        this.guiNode = guiNode;
         
         guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
         text = new BitmapText(guiFont, false);
         text.setSize(guiFont.getCharSet().getRenderedSize() * FONT_SIZE);
         text.setColor(ColorRGBA.Red);
         text.setText("time: " + time);
-        float X= settings.getWidth()*0.5f;
+        float X= settings.getWidth()*0.7f;
         float Y= settings.getHeight()*0.95f;
         text.setLocalTranslation( X, Y, 0);
         guiNode.attachChild(text);
@@ -44,8 +46,20 @@ public class Timer {
     public void addTime(float tpf){
         
         this.time += tpf;
-        text.setText("time: " + time);
         
+        int hours = (int)this.time / 3600;
+        int minutes = (int)(this.time % 3600) / 60;
+        int seconds = (int)this.time % 60;
+        text.setText("time: " + hours +":"+minutes+":"+seconds);
+        
+    }
+    
+    public float getTime(){
+        return this.time;
+    }
+    
+    public void dettachFromParent(){
+        this.guiNode.detachChild(text);
     }
     
 }

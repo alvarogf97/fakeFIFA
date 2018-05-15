@@ -24,6 +24,8 @@ import mygame.terrain.Timer;
 public class Main extends SimpleApplication {
     
     private Timer timer;
+    private Matcher matcher;
+    private boolean end = false;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -58,7 +60,7 @@ public class Main extends SimpleApplication {
         stadium.getNode().addControl(stadiumPhysics);
         states.getPhysicsSpace().add(stadiumPhysics);
         GoalHelper goalHelper = new GoalHelper(assetManager);
-        Matcher matcher = new Matcher(assetManager, settings, guiNode);
+        matcher = new Matcher(assetManager, settings, guiNode);
         timer = new Timer(assetManager, settings, guiNode);
         
         /*
@@ -136,8 +138,15 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        if(timer !=null){
+        if(timer !=null && timer.getTime()<=3){
             timer.addTime(tpf);
+        }
+        
+        if(timer !=null && timer.getTime()>3 && !end){
+            rootNode.detachAllChildren();
+            timer.dettachFromParent();
+            matcher.finishGame();
+            end = true;
         }
     }
 
