@@ -21,12 +21,10 @@ import mygame.models.Ball;
 public class BallController extends AbstractControl{
     
     private Ball ball;
-    private float time;
     
     public BallController(Ball ball){
         
         this.ball = ball;
-        this.time = 0;
         
     }
 
@@ -70,8 +68,8 @@ public class BallController extends AbstractControl{
                 
                 ball.getTeamB().collideWith(rayo, results_teamB);
                 ball.getTeamA().collideWith(rayo, results_teamA);
-                if((results_teamA.size()>0 && !avant(results_teamA.getClosestCollision().getGeometry()))
-                  ||results_teamB.size()>0 && !avant(results_teamB.getClosestCollision().getGeometry())){
+                if((results_teamA.size()>0 && avant(results_teamA.getClosestCollision().getGeometry()))
+                  ||results_teamB.size()>0 && avant(results_teamB.getClosestCollision().getGeometry())){
                     Vector3f esquiva = new Vector3f(ball.getGeometry().getWorldTranslation().x+10,0,0).normalize();
                     ball.getPhysics().setLinearVelocity(esquiva.mult(ball.VELOCITY_TO_COME_BACK*tpf));
                 }else{
@@ -81,7 +79,6 @@ public class BallController extends AbstractControl{
                 //la paramos
                 ball.getPhysics().clearForces();
                 ball.getPhysics().setLinearVelocity(Vector3f.ZERO);
-                this.time = 0;
             }
     }
     

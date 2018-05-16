@@ -10,6 +10,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.util.concurrent.Semaphore;
+import mygame.states.Libero;
 import mygame.states.Tactic;
 
 /**
@@ -40,6 +41,7 @@ public class Team {
         this.oponents = oponents;
         this.ball = ball;
         this.teamName = teamName;
+        this.tactic = new Libero();
         semaphore = new Semaphore(1, true);
         
         this.defensor_left = new Defensor(mat, this, positions[0]);

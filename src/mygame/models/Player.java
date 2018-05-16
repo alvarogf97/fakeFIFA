@@ -18,6 +18,7 @@ import com.jme3.scene.shape.Box;
  */
 public abstract class Player {
     
+    public final int VELOCITY_TO_COME_BACK = 1000;
     protected Team team;
     protected Geometry box;
     protected RigidBodyControl physics;
@@ -72,6 +73,16 @@ public abstract class Player {
     public boolean isInInitialPosition(){
         return this.init_position.equals(box.getWorldTranslation());
     }
+    
+    public int getTactic(){
+        return this.team.getTacticType();
+    }
+    
+    public Team getTeam(){
+        return this.team;
+    }
+    
+    
     
     
     

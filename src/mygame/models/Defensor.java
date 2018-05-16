@@ -7,6 +7,7 @@ package mygame.models;
 
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import mygame.controllers.DefensorController;
 
 /**
  *
@@ -17,7 +18,8 @@ public class Defensor extends Player{
     public Defensor(Material mat, Team team, Vector3f position) {
         super(mat, team, position);
         
-        // CREAD AQUI LA REFERENCIA AL ABSTRACT CONTROL Y LO QUE NECESITEIS
+        DefensorController controller = new DefensorController(this);
+        this.box.addControl(controller);
         
     }
     
