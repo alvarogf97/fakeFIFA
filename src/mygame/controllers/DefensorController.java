@@ -13,6 +13,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.control.AbstractControl;
 import mygame.models.Defensor;
+import mygame.models.Player;
 import mygame.utils.Vector3fUtilities;
 
 /**
@@ -152,6 +153,7 @@ public class DefensorController extends AbstractControl{
                                 this.player.getBall().getPhysics().clearForces();
                                 this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
                                 this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
+                                Player pToPass = this.player.getTeam().whoIsBetterToPassTheBall();
 
                                 /*
                                 *       =============================================================
@@ -159,16 +161,47 @@ public class DefensorController extends AbstractControl{
                                 *       =============================================================
                                 */
 
-                                        Vector3f dirPase = this.player.getTeam().mates.getChild(4).getWorldTranslation().subtract(this.player.getBall().getGeometry().getWorldTranslation()).normalize();
-                                        this.player.getBall().getPhysics().applyImpulse(dirPase.mult(15), Vector3f.ZERO);
+                                        if(!pToPass.equals(this.player)){
+                                            Vector3f direction = pToPass.getGeometry().getWorldTranslation().subtract(this.player.getBall().getGeometry().getWorldTranslation()).normalize();
+                                            this.player.getBall().getPhysics().applyImpulse(direction.mult(10), Vector3f.ZERO);
+                                        }
+                                        
 
                                 /*
                                 *       =============================================================
-                                *      ||             SI DECIDO MOVERME -> APRENDO                  ||
+                                *      ||                   SI DECIDO MOVERME                       ||
                                 *       =============================================================
                                 */
 
-                                        //aprendiendo a moverme con la pelota
+                                        else{
+                                            // EN LIBERO PREGUNTO QUE ES MEJOR SI MOVER HACIA DELANTE O HACIA ATRAS
+                                            
+                                            Vector3f direction;
+                                            
+                                            if(this.player.getTeam().getNumberOfMaterInMyTerrain()>=3){
+                                                //hacia delante
+                                                direction = this.player.getTeam().getEnemyGoal().getMiddlePosition().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+                                            }else{
+                                                //hacia atras
+                                                direction = this.player.getTeam().getGoalkeeper().getGeometry().getWorldTranslation().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+                                            }
+                                            
+                                            if(hasObstacle(direction)){
+                                                Vector3f esquiva;
+                                                this.player.getFisicas().clearForces();
+                                                if(dodgeSideRight()){
+                                                    esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x+10,0,0).normalize();
+                                                }else{
+                                                    esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x-10,0,0).normalize();
+                                                }
+                                                this.player.getFisicas().applyCentralForce(esquiva.mult(5));
+                                            }else{
+                                              if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
+                                                this.player.getFisicas().applyCentralForce(direction.mult(5));
+                                                this.player.getBall().getPhysics().applyImpulse(direction.mult(10), Vector3f.ZERO);
+                                                }  
+                                            }
+                                        }
 
                     }
 

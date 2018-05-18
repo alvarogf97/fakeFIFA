@@ -93,7 +93,7 @@ public class Main extends SimpleApplication {
         Material matTeamA = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamA.setTexture("DiffuseMap", assetManager.loadTexture("Materials/naranja.jpg"));
         
-        teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA,0, stadium.getPorteria2());
+        teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA,0, stadium.getPorteria2(), matcher);
         teams.attachChild(teamANode);
         
         
@@ -114,7 +114,7 @@ public class Main extends SimpleApplication {
         Material matTeamB = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamB.setTexture("DiffuseMap", assetManager.loadTexture("Materials/azul.png"));
         
-        teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB,1, stadium.getPorteria2());
+        teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB,1, stadium.getPorteria2(), matcher);
         teams.attachChild(teamANode);
         
         /*

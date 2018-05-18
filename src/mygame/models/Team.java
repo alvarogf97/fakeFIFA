@@ -13,6 +13,7 @@ import java.util.concurrent.Semaphore;
 import mygame.states.Libero;
 import mygame.states.Tactic;
 import mygame.terrain.Goal;
+import mygame.terrain.Matcher;
 
 /**
  *
@@ -31,6 +32,7 @@ public class Team {
     private Goal enemyGoal;
     private Semaphore semaphore;
     private int terrain; //0 if MADRID 1 if BARCELONA
+    private Matcher matcher;
     
     // team nodes
     
@@ -38,8 +40,9 @@ public class Team {
     public Node mates;
     public Ball ball;
     
-    public Team(Material mat, String teamName, Node oponents, Node mates, Ball ball, BulletAppState states, Vector3f [] positions, int terrain, Goal enemyGoal){
+    public Team(Material mat, String teamName, Node oponents, Node mates, Ball ball, BulletAppState states, Vector3f [] positions, int terrain, Goal enemyGoal, Matcher matcher){
         
+        this.matcher = matcher;
         this.enemyGoal = enemyGoal;
         this.terrain = terrain;
         this.mates = mates;
@@ -137,7 +140,7 @@ public class Team {
     *      ||         SI EL JUGADOR DEVUELTO SOY YO, ME MUEVO           ||
     *       =============================================================
     */
-    public Player whoIsBetterToGo(){
+    public Player whoIsBetterToPassTheBall(){
         //distancia compañero mas cercano
         //distancia porteria enemiga
         //numero oponentes en 10m
@@ -179,6 +182,46 @@ public class Team {
 
     public Goal getEnemyGoal() {
         return enemyGoal;
+    }
+    
+    public int getMyGoals(){
+        int num;
+        if(this.terrain == 0){
+           num = this.matcher.getGoals_team_back();
+        }else{
+           num = this.matcher.getGoals_team_front();
+        }
+        return num;
+    }
+    
+    public int getOponentGoals(){
+        int num;
+        if(this.terrain == 0){
+            num = this.matcher.getGoals_team_front();
+        }else{
+            num = this.matcher.getGoals_team_back();
+        }
+        return num;
+    }
+    
+    public int getNumberOfMaterInMyTerrain(){
+        int num = 0;
+        
+        if(this.terrain == 0){
+            if(this.defensor_left.getGeometry().getWorldTranslation().z < 0) num++;
+            if(this.defensor_right.getGeometry().getWorldTranslation().z < 0) num++;
+            if(this.leading_left.getGeometry().getWorldTranslation().z < 0) num++;
+            if(this.leading_right.getGeometry().getWorldTranslation().z < 0) num++;
+            if(this.midfield.getGeometry().getWorldTranslation().z < 0) num++;
+        }else{
+            if(this.defensor_left.getGeometry().getWorldTranslation().z > 0) num++;
+            if(this.defensor_right.getGeometry().getWorldTranslation().z > 0) num++;
+            if(this.leading_left.getGeometry().getWorldTranslation().z > 0) num++;
+            if(this.leading_right.getGeometry().getWorldTranslation().z > 0) num++;
+            if(this.midfield.getGeometry().getWorldTranslation().z > 0) num++;
+        }
+        
+        return num;
     }
     
     

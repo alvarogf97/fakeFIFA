@@ -60,6 +60,16 @@ public class Matcher {
         this.text.setText(goals_team_front + "  /  " + goals_team_back);
         
     }
+
+    public synchronized int getGoals_team_front() {
+        return goals_team_front;
+    }
+
+    public synchronized int getGoals_team_back() {
+        return goals_team_back;
+    }
+    
+    
     
     public void finishGame(){
         text.setSize(guiFont.getCharSet().getRenderedSize() * FONT_SIZE_END);
