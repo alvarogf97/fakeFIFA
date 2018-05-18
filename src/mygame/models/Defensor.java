@@ -15,12 +15,29 @@ import mygame.controllers.DefensorController;
  */
 public class Defensor extends Player{
     
-    public Defensor(Material mat, Team team, Vector3f position) {
+    private boolean right;
+    
+    public Defensor(Material mat, Team team, Vector3f position, boolean right) {
         super(mat, team, position);
         
+        this.right = right;
         DefensorController controller = new DefensorController(this);
         this.box.addControl(controller);
         
     }
+    
+    public boolean isRight(){
+        boolean res;
+        if(this.team.getTerrain() == 0){
+            res = this.right;
+        }else{
+            res = !this.right;
+        }
+        return res;
+    }
+    
+    
+    
+    
     
 }

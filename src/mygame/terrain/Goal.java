@@ -55,6 +55,10 @@ public class Goal {
         return barraIzq.getWorldTranslation();
     }
     
+    public Vector3f getMiddlePosition(){
+        return (this.getLeftPosition().subtract(this.getRightPosition())).divide(2);
+    }
+    
     public Vector3f getRightPosition(){
         return barraDcha.getWorldTranslation();
     }

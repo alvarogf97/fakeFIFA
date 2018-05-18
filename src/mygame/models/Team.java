@@ -12,6 +12,7 @@ import com.jme3.scene.Node;
 import java.util.concurrent.Semaphore;
 import mygame.states.Libero;
 import mygame.states.Tactic;
+import mygame.terrain.Goal;
 
 /**
  *
@@ -27,7 +28,9 @@ public class Team {
     private Player leading_left;
     private Player leading_right;
     private Player midfield;
+    private Goal enemyGoal;
     private Semaphore semaphore;
+    private int terrain; //0 if MADRID 1 if BARCELONA
     
     // team nodes
     
@@ -35,8 +38,10 @@ public class Team {
     public Node mates;
     public Ball ball;
     
-    public Team(Material mat, String teamName, Node oponents, Node mates, Ball ball, BulletAppState states, Vector3f [] positions){
+    public Team(Material mat, String teamName, Node oponents, Node mates, Ball ball, BulletAppState states, Vector3f [] positions, int terrain, Goal enemyGoal){
         
+        this.enemyGoal = enemyGoal;
+        this.terrain = terrain;
         this.mates = mates;
         this.oponents = oponents;
         this.ball = ball;
@@ -44,8 +49,8 @@ public class Team {
         this.tactic = new Libero();
         semaphore = new Semaphore(1, true);
         
-        this.defensor_left = new Defensor(mat, this, positions[0]);
-        this.defensor_right = new Defensor(mat, this, positions[1]);
+        this.defensor_left = new Defensor(mat, this, positions[0],false);
+        this.defensor_right = new Defensor(mat, this, positions[1],true);
         this.midfield = new Midfield(mat, this, positions[2]);
         this.goalkeeper = new Goalkeeper(mat, this, positions[3]);
         this.leading_left = new Leading(mat, this, positions[4]);
@@ -121,6 +126,66 @@ public class Team {
     public void setMates(Node mates) {
         this.mates = mates;
     }
+    
+    public int getTerrain(){
+        return this.terrain;
+    }
+    
+    /*
+    *       =============================================================
+    *      ||      DEVUELVE EL MEJOR JUGADOR AL QUE PASARLE LA PELOTA   ||
+    *      ||         SI EL JUGADOR DEVUELTO SOY YO, ME MUEVO           ||
+    *       =============================================================
+    */
+    public Player whoIsBetterToGo(){
+        //distancia compañero mas cercano
+        //distancia porteria enemiga
+        //numero oponentes en 10m
+        Player [] arrayP = new Player[]{this.defensor_left, this.defensor_right, this.goalkeeper, this.leading_left, this.leading_right, this.midfield};
+        Player res = null;
+        float min = Float.MAX_VALUE;
+        for(Player p : arrayP){
+            if(p.getPropability() < min){
+                res = p;
+                min = p.getPropability();
+            }
+        }
+        return res;
+    }
+
+    public Player getDefensor_left() {
+        return defensor_left;
+    }
+
+    public Player getDefensor_right() {
+        return defensor_right;
+    }
+
+    public Player getGoalkeeper() {
+        return goalkeeper;
+    }
+
+    public Player getLeading_left() {
+        return leading_left;
+    }
+
+    public Player getLeading_right() {
+        return leading_right;
+    }
+
+    public Player getMidfield() {
+        return midfield;
+    }
+
+    public Goal getEnemyGoal() {
+        return enemyGoal;
+    }
+    
+    
+    
+    
+    
+    
     
     
     

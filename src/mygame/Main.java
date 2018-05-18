@@ -72,8 +72,9 @@ public class Main extends SimpleApplication {
         Material matBall = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matBall.setTexture("DiffuseMap", assetManager.loadTexture("Materials/pelota.png"));
       
-        ball = new Ball(matBall, new Vector3f(0,1,0), goalHelper, matcher, teamANode, teamBNode);
+        ball = new Ball(matBall, new Vector3f(2,1,1), goalHelper, matcher, teamANode, teamBNode);
         states.getPhysicsSpace().add(ball.getPhysics());
+        ball.getPhysics().setLinearDamping(0.15f);
         
         /*
         *       =========================================
@@ -92,7 +93,7 @@ public class Main extends SimpleApplication {
         Material matTeamA = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamA.setTexture("DiffuseMap", assetManager.loadTexture("Materials/naranja.jpg"));
         
-        teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA);
+        teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA,0, stadium.getPorteria2());
         teams.attachChild(teamANode);
         
         
@@ -113,7 +114,7 @@ public class Main extends SimpleApplication {
         Material matTeamB = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamB.setTexture("DiffuseMap", assetManager.loadTexture("Materials/azul.png"));
         
-        teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB);
+        teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB,1, stadium.getPorteria2());
         teams.attachChild(teamANode);
         
         /*
