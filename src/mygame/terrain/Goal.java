@@ -56,7 +56,7 @@ public class Goal {
     }
     
     public Vector3f getMiddlePosition(){
-        return (this.getLeftPosition().subtract(this.getRightPosition())).divide(2);
+        return (this.getLeftPosition().add(this.getRightPosition())).divide(2);
     }
     
     public Vector3f getRightPosition(){
