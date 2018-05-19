@@ -31,10 +31,17 @@ import weka.classifiers.trees.*;
  */
 public class DefensorController extends AbstractControl{
     
-    Defensor player;
+    private Defensor player;
+    private String pathFile;
+    private Instances casosDePruebaPasarPelota;
+    private M5P conocimientoPasar;
     
-    public DefensorController(Defensor player){
+    public DefensorController(Defensor player) throws FileNotFoundException, IOException{
         this.player = player;
+        this.pathFile = System.getProperty("user.dir") + "/src/resources/arff/" + player.getFilePasarName() + ".arff";
+        this.casosDePruebaPasarPelota = new Instances(new BufferedReader(new FileReader(pathFile)));
+        casosDePruebaPasarPelota.setClassIndex(4);
+        this.conocimientoPasar = new M5P();
     }
     
     @Override
@@ -150,7 +157,7 @@ public class DefensorController extends AbstractControl{
                     */
                             if(this.player.getGeometry().getWorldTranslation().distance
                             (this.player.getBall().getGeometry().getWorldTranslation()) 
-                                > this.player.ROUNDED_AREA){
+                                > Defensor.ROUNDED_AREA){
 
                                 this.player.setHasBall(false); // he perdido la pelota
 
@@ -177,7 +184,6 @@ public class DefensorController extends AbstractControl{
                                         if(!pToPass.equals(this.player)){
                                             
                                             this.aprenderPasar(pToPass); //fase de aprendizaje
-                                            
                                             
                                         }
                                         
@@ -210,10 +216,11 @@ public class DefensorController extends AbstractControl{
                                                     esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x-10,0,0).normalize();
                                                 }
                                                 this.player.getFisicas().applyCentralForce(esquiva.mult(5)); 
+                                                this.player.getBall().getPhysics().applyImpulse(esquiva.mult(5), Vector3f.ZERO);
                                             }else{
                                               if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
-                                                this.player.getFisicas().applyCentralForce(direction.mult(5));
-                                                this.player.getBall().getPhysics().applyImpulse(direction.mult(10), Vector3f.ZERO);
+                                                    this.player.getFisicas().applyCentralForce(direction.mult(5));
+                                                    this.player.getBall().getPhysics().applyImpulse(direction.mult(5), Vector3f.ZERO);
                                                 }  
                                             }
                                         }
@@ -394,28 +401,18 @@ public class DefensorController extends AbstractControl{
                 
                 
                 if(isCorrect(direction, distance, modulo)){
-                    //ficheros
-                    String pasar = System.getProperty("user.dir") + "/resources/arrf/pasar.arff";
+                    
+                    Instance instance = new Instance(casosDePruebaPasarPelota.numAttributes());
 
-                    //instances
-                    Instances casosDePrueba = new Instances(new BufferedReader(new FileReader(pasar)));
-
-                    casosDePrueba.setClassIndex(4);
-
-                    M5P conocimiento = new M5P();
-
-
-                    Instance instance = new Instance(casosDePrueba.numAttributes());
-
-                    instance.setDataset(casosDePrueba);
+                    instance.setDataset(casosDePruebaPasarPelota);
 
                     instance.setValue(0, direction.x);
                     instance.setValue(1, direction.y);
                     instance.setValue(2, direction.z);
                     instance.setValue(3, distance);
                     instance.setValue(4, modulo);
-                    casosDePrueba.add(instance);
-                    conocimiento.buildClassifier(casosDePrueba);
+                    casosDePruebaPasarPelota.add(instance);
+                    conocimientoPasar.buildClassifier(casosDePruebaPasarPelota);
                 }
                 
                 this.disparar(modulo, direction, distance);
@@ -439,7 +436,7 @@ public class DefensorController extends AbstractControl{
             
             private void disparar(int module, Vector3f direction, float distancia){
                 if(this.hasObstacle(direction, distancia)){
-                    Vector3f arriba = new Vector3f(direction.x, direction.y+10, direction.z).normalize();
+                    Vector3f arriba = new Vector3f(direction.x, direction.y+0.7f, direction.z).normalize();
                     this.player.getBall().getPhysics().applyImpulse(arriba.mult(module), Vector3f.ZERO);
                 }else{
                     this.player.getBall().getPhysics().applyImpulse(direction.mult(module), Vector3f.ZERO);

@@ -9,6 +9,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 import mygame.states.Libero;
 import mygame.states.Tactic;
@@ -40,7 +41,7 @@ public class Team {
     public Node mates;
     public Ball ball;
     
-    public Team(Material mat, String teamName, Node oponents, Node mates, Ball ball, BulletAppState states, Vector3f [] positions, int terrain, Goal enemyGoal, Matcher matcher){
+    public Team(Material mat, String teamName, Node oponents, Node mates, Ball ball, BulletAppState states, Vector3f [] positions, int terrain, Goal enemyGoal, Matcher matcher, String [] filesPasar) throws IOException{
         
         this.matcher = matcher;
         this.enemyGoal = enemyGoal;
@@ -52,12 +53,12 @@ public class Team {
         this.tactic = new Libero();
         semaphore = new Semaphore(1, true);
         
-        this.defensor_left = new Defensor(mat, this, positions[0],false);
-        this.defensor_right = new Defensor(mat, this, positions[1],true);
-        this.midfield = new Midfield(mat, this, positions[2]);
-        this.goalkeeper = new Goalkeeper(mat, this, positions[3]);
-        this.leading_left = new Leading(mat, this, positions[4]);
-        this.leading_right = new Leading(mat, this, positions[5]);
+        this.defensor_left = new Defensor(mat, this, positions[0],false,filesPasar[0]);
+        this.defensor_right = new Defensor(mat, this, positions[1],true,filesPasar[1]);
+        this.midfield = new Midfield(mat, this, positions[2],filesPasar[2]);
+        this.goalkeeper = new Goalkeeper(mat, this, positions[3],filesPasar[3]);
+        this.leading_left = new Leading(mat, this, positions[4],filesPasar[4]);
+        this.leading_right = new Leading(mat, this, positions[5],filesPasar[5]);
         
         //adding players to mates node
         

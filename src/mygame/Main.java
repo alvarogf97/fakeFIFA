@@ -9,6 +9,9 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mygame.models.Ball;
 import mygame.models.Team;
 import mygame.terrain.FootballStadium;
@@ -37,8 +40,8 @@ public class Main extends SimpleApplication {
         
         BulletAppState states = new BulletAppState();
         stateManager.attach(states);
-        Team teamA;
-        Team teamB;
+        Team teamA = null;
+        Team teamB = null;
         Node teamANode = new Node();
         Node teamBNode = new Node();
         Node teams = new Node();
@@ -90,10 +93,21 @@ public class Main extends SimpleApplication {
             new Vector3f(-33.5f,2,+25.5f), //leading_left
             new Vector3f(+33.5f,2,+25.5f)  //leading_right
         };
+        String [] filesPasarA = new String[]{
+            "pasar_defensor_left_teamA",
+            "pasar_defensor_right_teamA",
+            "pasar_midfield_teamA",
+            "pasar_goalKeepper_teamA",
+            "pasar_leading_left_teamA",
+            "pasar_leading_right_teamA"};
         Material matTeamA = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamA.setTexture("DiffuseMap", assetManager.loadTexture("Materials/naranja.jpg"));
         
-        teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA,0, stadium.getPorteria2(), matcher);
+        try {
+            teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA,0, stadium.getPorteria2(), matcher, filesPasarA);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         teams.attachChild(teamANode);
         
         
@@ -111,10 +125,21 @@ public class Main extends SimpleApplication {
             new Vector3f(+33.5f,2,-25.5f), //leading_left
             new Vector3f(-33.5f,2,-25.5f)  //leading_right
         };
+        String [] filesPasarB = new String[]{
+            "pasar_defensor_left_teamB",
+            "pasar_defensor_right_teamB",
+            "pasar_midfield_teamB",
+            "pasar_goalKeepper_teamB",
+            "pasar_leading_left_teamB",
+            "pasar_leading_right_teamB"};
         Material matTeamB = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamB.setTexture("DiffuseMap", assetManager.loadTexture("Materials/azul.png"));
         
-        teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB,1, stadium.getPorteria2(), matcher);
+        try {
+            teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB,1, stadium.getPorteria2(), matcher, filesPasarB);
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         teams.attachChild(teamANode);
         
         /*

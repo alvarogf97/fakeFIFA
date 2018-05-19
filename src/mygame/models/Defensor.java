@@ -7,6 +7,7 @@ package mygame.models;
 
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import java.io.IOException;
 import mygame.controllers.DefensorController;
 
 /**
@@ -17,8 +18,8 @@ public class Defensor extends Player{
     
     private boolean right;
     
-    public Defensor(Material mat, Team team, Vector3f position, boolean right) {
-        super(mat, team, position);
+    public Defensor(Material mat, Team team, Vector3f position, boolean right, String filePasarName) throws IOException {
+        super(mat, team, position, filePasarName);
         
         this.right = right;
         DefensorController controller = new DefensorController(this);

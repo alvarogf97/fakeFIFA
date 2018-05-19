@@ -27,7 +27,7 @@ public abstract class Player {
     public static final int MAX_LINEAR_VELOCITY = 4;
     public static final int ROUNDED_AREA = 2;
     public static final int PASAR_MIN = 5;
-    public static final int PASAR_MAX = 1500;
+    public static final int PASAR_MAX = 20;
     
     protected Team team;
     protected Geometry box;
@@ -38,10 +38,12 @@ public abstract class Player {
     protected Ball ball;
     protected Vector3f init_position;
     protected Vector3f [] directions;
+    protected String filePasarName;
     
     
-    protected Player(Material mat, Team team, Vector3f position){
+    protected Player(Material mat, Team team, Vector3f position, String filePasarName){
         
+        this.filePasarName = filePasarName;
         this.init_position = position;
         this.oponents = team.oponents; 
         this.mates = team.mates;
@@ -170,6 +172,12 @@ public abstract class Player {
         }
         return enemyNumber;
     }
+
+    public String getFilePasarName() {
+        return filePasarName;
+    }
+    
+    
     
     
     
