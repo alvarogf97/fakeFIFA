@@ -107,9 +107,7 @@ public class DefensorController extends AbstractControl{
                                     }
                                     this.player.getFisicas().applyCentralForce(esquiva.mult(5));
                                 }else{
-                                    if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
-                                        this.player.getFisicas().applyCentralForce(direction.mult(5));
-                                    }  
+                                    this.player.getFisicas().applyCentralForce(direction.mult(5));
                                 }
                 /*
                 *       ==============================================================================
@@ -194,7 +192,7 @@ public class DefensorController extends AbstractControl{
                                                 }else{
                                                     esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x-10,0,0).normalize();
                                                 }
-                                                this.player.getFisicas().applyCentralForce(esquiva.mult(5));
+                                                this.player.getFisicas().applyCentralForce(esquiva.mult(5)); 
                                             }else{
                                               if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
                                                 this.player.getFisicas().applyCentralForce(direction.mult(5));
@@ -310,12 +308,13 @@ public class DefensorController extends AbstractControl{
                 player.getTeam().getOponents().collideWith(rayo, results_oponents);
                 player.getTeam().getMates().collideWith(rayo, results_mates);
 
-                return (results_mates.size()>0 && avant(results_mates.getClosestCollision().getGeometry()))
+                return (results_mates.size()>1 && avant(results_mates.getCollision(1).getGeometry()))
                           ||results_oponents.size()>0 && avant(results_oponents.getClosestCollision().getGeometry());
             }
 
             private boolean avant(Geometry geom){
-                return geom.getWorldTranslation().distance(player.getGeometry().getWorldTranslation())>=4;
+                float distance = geom.getWorldTranslation().distance(player.getGeometry().getWorldTranslation());
+                return distance <=15;
             }
 
             private boolean canGoToBallInLibero(){
@@ -323,7 +322,7 @@ public class DefensorController extends AbstractControl{
                 if(this.player.getTeam().getTerrain() == 0){
                     if(this.player.isRight()){
                        res = whereIsBallIn4Secs().z < 0
-                               && whereIsBallIn4Secs().x > 0; 
+                               && whereIsBallIn4Secs().x >= 0; 
                     }else{
                        res = whereIsBallIn4Secs().z < 0
                                && whereIsBallIn4Secs().x < 0; 
@@ -334,12 +333,12 @@ public class DefensorController extends AbstractControl{
                                && whereIsBallIn4Secs().x > 0; 
                     }else{
                        res = whereIsBallIn4Secs().z > 0
-                               && whereIsBallIn4Secs().x < 0; 
+                               && whereIsBallIn4Secs().x <= 0; 
                     }
                 }
                 return res;
             }
-            
+
             private boolean dodgeSideRight(){
                 boolean res;
                 if(this.player.getTeam().getTerrain() == 0){

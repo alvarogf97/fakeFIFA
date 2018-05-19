@@ -83,12 +83,12 @@ public class Main extends SimpleApplication {
         */
         
         Vector3f [] positionsA = new Vector3f[]{
-            new Vector3f(-33.5f,1,-50), //defenosr_left
-            new Vector3f(+33.5f,1,-50), //defensor_right
-            new Vector3f(0f,1,-29.3f), //midfield
-            new Vector3f(0f,1,-85f), //goalkeeper
-            new Vector3f(-33.5f,1,+25.5f), //leading_left
-            new Vector3f(+33.5f,1,+25.5f)  //leading_right
+            new Vector3f(-33.5f,2,-50), //defenosr_left
+            new Vector3f(+33.5f,2,-50), //defensor_right
+            new Vector3f(0f,2,-29.3f), //midfield
+            new Vector3f(0f,2,-85f), //goalkeeper
+            new Vector3f(-33.5f,2,+25.5f), //leading_left
+            new Vector3f(+33.5f,2,+25.5f)  //leading_right
         };
         Material matTeamA = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamA.setTexture("DiffuseMap", assetManager.loadTexture("Materials/naranja.jpg"));
@@ -104,12 +104,12 @@ public class Main extends SimpleApplication {
         */
         
         Vector3f [] positionsB = new Vector3f[]{
-            new Vector3f(+33.5f,1,+50), //defenosr_left
-            new Vector3f(-33.5f,1,+50), //defensor_right
-            new Vector3f(0f,1,+29.3f), //midfield
-            new Vector3f(0f,1,+85f), //goalkeeper
-            new Vector3f(+33.5f,1,-25.5f), //leading_left
-            new Vector3f(-33.5f,1,-25.5f)  //leading_right
+            new Vector3f(+33.5f,2,+50), //defenosr_left
+            new Vector3f(-33.5f,2,+50), //defensor_right
+            new Vector3f(0f,2,+29.3f), //midfield
+            new Vector3f(0f,2,+85f), //goalkeeper
+            new Vector3f(+33.5f,2,-25.5f), //leading_left
+            new Vector3f(-33.5f,2,-25.5f)  //leading_right
         };
         Material matTeamB = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamB.setTexture("DiffuseMap", assetManager.loadTexture("Materials/azul.png"));

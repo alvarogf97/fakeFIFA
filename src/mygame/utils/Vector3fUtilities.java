@@ -20,4 +20,11 @@ public class Vector3fUtilities {
         return (float) Math.sqrt(x_2+y_2+z_2);
     }
     
+    public static float distance(Vector3f origin, Vector3f destiny){
+        double x_2 = Math.pow(origin.x-destiny.x, 2);
+        double y_2 = Math.pow(origin.y-destiny.y, 2);
+        double z_2 = Math.pow(origin.z-destiny.z, 2);
+        return (float) Math.sqrt(x_2+y_2+z_2);
+    }
+    
 }
