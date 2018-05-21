@@ -16,6 +16,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import java.util.Iterator;
 import java.util.Objects;
+import mygame.utils.PlayerUtilities;
 
 /**
  *
@@ -24,7 +25,7 @@ import java.util.Objects;
 public abstract class Player {
     
     public static final int VELOCITY_TO_COME_BACK = 2500;
-    public static final int MAX_LINEAR_VELOCITY = 4;
+    public static final int MAX_LINEAR_VELOCITY = 10;
     public static final int ROUNDED_AREA = 2;
     public static final int PASAR_MIN = 5;
     public static final int PASAR_MAX = 20;
@@ -129,20 +130,44 @@ public abstract class Player {
         return hash;
     }
     
+    public Vector3f getBestDirectionToStandOut(){
+        Vector3f res = directions[1];
+        float min = Float.MAX_VALUE;
+        for (Vector3f direction : this.directions){
+            float prob = this.getProbabilityDirection(direction);
+            if(min > prob){
+                min = prob;
+                res = direction;
+            }
+        }
+        return res;
+    }
+    
+    private float getProbabilityDirection(Vector3f direction){
+        Vector3f velocity = direction.mult(5);
+        Vector3f posInicial = box.getWorldTranslation();
+        Vector3f posFinal = new Vector3f(posInicial.x + velocity.x, posInicial.y + velocity.y, posInicial.z + velocity.z);
+        return this.distNearestMate(posFinal) + 
+                this.distToEnemyGoal(posFinal) + 
+                this.getEnemyNumberIn10m(posFinal); 
+    }
+    
     public float getPropability(){
-        return this.distNearestMate() + this.distToEnemyGoal() + this.getEnemyNumberIn10m();
+        return this.distNearestMate(this.box.getWorldTranslation()) + 
+                this.distToEnemyGoal(this.box.getWorldTranslation()) + 
+                this.getEnemyNumberIn10m(this.box.getWorldTranslation());
     }
     
-    private float distToEnemyGoal(){
-        return this.box.getWorldTranslation().distance(this.team.getEnemyGoal().getMiddlePosition());
+    private float distToEnemyGoal(Vector3f position){
+        return position.distance(this.team.getEnemyGoal().getMiddlePosition());
     }
     
-    private float distNearestMate(){
-        float dist1 = this.box.getWorldTranslation().distance(this.team.getDefensor_left().getGeometry().getWorldTranslation());
-        float dist2 = this.box.getWorldTranslation().distance(this.team.getDefensor_right().getGeometry().getWorldTranslation());
-        float dist3 = this.box.getWorldTranslation().distance(this.team.getMidfield().getGeometry().getWorldTranslation());
-        float dist4 = this.box.getWorldTranslation().distance(this.team.getLeading_left().getGeometry().getWorldTranslation());
-        float dist5 = this.box.getWorldTranslation().distance(this.team.getLeading_right().getGeometry().getWorldTranslation());
+    private float distNearestMate(Vector3f position){
+        float dist1 = position.distance(this.team.getDefensor_left().getGeometry().getWorldTranslation());
+        float dist2 = position.distance(this.team.getDefensor_right().getGeometry().getWorldTranslation());
+        float dist3 = position.distance(this.team.getMidfield().getGeometry().getWorldTranslation());
+        float dist4 = position.distance(this.team.getLeading_left().getGeometry().getWorldTranslation());
+        float dist5 = position.distance(this.team.getLeading_right().getGeometry().getWorldTranslation());
         return getMin(new Float []{dist1, dist2, dist3, dist4, dist5});
     }
     
@@ -156,8 +181,7 @@ public abstract class Player {
         return minValue;
     }
     
-    
-    private int getEnemyNumberIn10m(){
+    private int getEnemyNumberIn10m(Vector3f position){
         int enemyNumber = 0;
         for(Vector3f direction : directions){
             CollisionResults results = new CollisionResults();
@@ -165,7 +189,7 @@ public abstract class Player {
             this.team.getOponents().collideWith(rayo, results);
             Iterator<CollisionResult> iter = results.iterator();
             while(iter.hasNext()){
-                if(iter.next().getGeometry().getWorldTranslation().distance(this.box.getWorldTranslation())<=10){
+                if(iter.next().getGeometry().getWorldTranslation().distance(position)<=10){
                     enemyNumber++;
                 }
             }
@@ -173,9 +197,20 @@ public abstract class Player {
         return enemyNumber;
     }
 
+    public void pass(int module, Vector3f direction, float distancia){
+        if (PlayerUtilities.hasObstacle(this, direction, distancia)) {
+            Vector3f arriba = new Vector3f(direction.x, direction.y + 0.7f, direction.z).normalize();
+            this.getBall().getPhysics().applyImpulse(arriba.mult(module), Vector3f.ZERO);
+        } else {
+            this.getBall().getPhysics().applyImpulse(direction.mult(module), Vector3f.ZERO);
+        }
+    }
+
     public String getFilePasarName() {
         return filePasarName;
     }
+    
+    
     
     
     

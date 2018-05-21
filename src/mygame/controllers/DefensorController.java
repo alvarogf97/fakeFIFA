@@ -5,25 +5,19 @@
  */
 package mygame.controllers;
 
-import com.jme3.collision.CollisionResults;
-import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.control.AbstractControl;
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mygame.models.Defensor;
 import mygame.models.Player;
+import mygame.trainings.PassTraining;
+import mygame.utils.PlayerUtilities;
 import mygame.utils.Vector3fUtilities;
-import weka.core.*;
-import weka.classifiers.trees.*;
 
 /**
  *
@@ -32,16 +26,11 @@ import weka.classifiers.trees.*;
 public class DefensorController extends AbstractControl{
     
     private Defensor player;
-    private String pathFile;
-    private Instances casosDePruebaPasarPelota;
-    private M5P conocimientoPasar;
+    private PassTraining passTraining;
     
     public DefensorController(Defensor player) throws FileNotFoundException, IOException{
         this.player = player;
-        this.pathFile = System.getProperty("user.dir") + "/src/resources/arff/" + player.getFilePasarName() + ".arff";
-        this.casosDePruebaPasarPelota = new Instances(new BufferedReader(new FileReader(pathFile)));
-        casosDePruebaPasarPelota.setClassIndex(4);
-        this.conocimientoPasar = new M5P();
+        passTraining = new PassTraining(player);
     }
     
     @Override
@@ -109,6 +98,9 @@ public class DefensorController extends AbstractControl{
                                 this.player.getBall().getPhysics().clearForces();
                                 this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
                                 this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
+                                this.player.getFisicas().clearForces();
+                                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
                                 this.player.setHasBall(true);
 
                 /*
@@ -118,7 +110,7 @@ public class DefensorController extends AbstractControl{
                 */
                         }else if(canGoToBallInLibero()){
                                 Vector3f direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
-                                if(hasObstacle(direction)){
+                                if(PlayerUtilities.hasObstacle(this.player,direction)){
                                     //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
                                     Vector3f esquiva;
                                     this.player.getFisicas().clearForces();
@@ -129,7 +121,10 @@ public class DefensorController extends AbstractControl{
                                     }
                                     this.player.getFisicas().applyCentralForce(esquiva.mult(5));
                                 }else{
-                                    this.player.getFisicas().applyCentralForce(direction.mult(5));
+                                    if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
+                                        this.player.getFisicas().applyCentralForce(direction.mult(5));
+                                    }
+                                    
                                 }
                 /*
                 *       ==============================================================================
@@ -137,7 +132,13 @@ public class DefensorController extends AbstractControl{
                 *       ==============================================================================
                 */
                         }else{
-                            this.backToHome(tpf);
+                            if(!this.player.getGeometry().getWorldTranslation().equals(this.player.getInitPosition())){
+                                this.backToHome(tpf);
+                            }else{
+                                this.player.getFisicas().clearForces();
+                                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+                            }
                         }
             }
 
@@ -183,7 +184,12 @@ public class DefensorController extends AbstractControl{
 
                                         if(!pToPass.equals(this.player)){
                                             
-                                            this.aprenderPasar(pToPass); //fase de aprendizaje
+                                            // para la fase de entrenamiento
+                                            this.passTraining.learn(pToPass);
+                                            
+                                            //funcionamiento entrenado
+                                            //this.passTraining.useKnowledge(pToPass);
+                                            
                                             
                                         }
                                         
@@ -207,7 +213,7 @@ public class DefensorController extends AbstractControl{
                                                 direction = this.player.getTeam().getGoalkeeper().getGeometry().getWorldTranslation().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                                             }
                                             
-                                            if(hasObstacle(direction)){
+                                            if(PlayerUtilities.hasObstacle(this.player,direction)){
                                                 Vector3f esquiva;
                                                 this.player.getFisicas().clearForces();
                                                 if(dodgeSideRight()){
@@ -239,6 +245,12 @@ public class DefensorController extends AbstractControl{
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
                     *       =============================================================
                     */
+                    
+                            /*
+                            Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
+                            if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
+                                this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
+                            } */
 
                 }
             }
@@ -297,10 +309,8 @@ public class DefensorController extends AbstractControl{
     
             private void backToHome(float tpf){
                 if(!this.player.isInInitialPosition()){
-                        //come back to init position
                         Vector3f direction = player.getInitPosition().subtract(player.getGeometry().getWorldTranslation()).normalize();
-
-                        if(hasObstacle(direction)){
+                        if(PlayerUtilities.hasObstacle(this.player,direction)){
                             Vector3f esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x+10,0,0).normalize();
                             player.getFisicas().setLinearVelocity(esquiva.mult(player.VELOCITY_TO_COME_BACK*tpf));
                         }else{
@@ -325,51 +335,15 @@ public class DefensorController extends AbstractControl{
     *       =============================================================
     */
     
-            private boolean hasObstacle(Vector3f direction){
-                Ray rayo = new Ray(player.getGeometry().getWorldTranslation(), direction);
-                CollisionResults results_mates = new CollisionResults();
-                CollisionResults results_oponents = new CollisionResults();
-                player.getTeam().getOponents().collideWith(rayo, results_oponents);
-                player.getTeam().getMates().collideWith(rayo, results_mates);
-
-                return (results_mates.size()>1 && avant(results_mates.getCollision(1).getGeometry()))
-                          ||results_oponents.size()>0 && avant(results_oponents.getClosestCollision().getGeometry());
-            }
-            
-            private boolean hasObstacle(Vector3f direction, float distance){
-                Ray rayo = new Ray(player.getGeometry().getWorldTranslation(), direction);
-                CollisionResults results_mates = new CollisionResults();
-                CollisionResults results_oponents = new CollisionResults();
-                player.getTeam().getOponents().collideWith(rayo, results_oponents);
-                player.getTeam().getMates().collideWith(rayo, results_mates);
-
-                return (results_mates.size()>1 && results_mates.getClosestCollision().getDistance() < distance)
-                          || (results_oponents.size()>0 && results_oponents.getClosestCollision().getDistance() < distance);
-            }
-
-            private boolean avant(Geometry geom){
-                float distance = geom.getWorldTranslation().distance(player.getGeometry().getWorldTranslation());
-                return distance <=15;
-            }
-
             private boolean canGoToBallInLibero(){
                 boolean res;
                 if(this.player.getTeam().getTerrain() == 0){
-                    if(this.player.isRight()){
-                       res = whereIsBallIn4Secs().z < 0
-                               && whereIsBallIn4Secs().x >= 0; 
-                    }else{
-                       res = whereIsBallIn4Secs().z < 0
-                               && whereIsBallIn4Secs().x < 0; 
-                    }
+                    res = whereIsBallIn4Secs().z < 0
+                               && this.player.getTeam().nearestDefensorBall().equals(this.player);
                 }else{
-                    if(this.player.isRight()){
-                       res = whereIsBallIn4Secs().z > 0
-                               && whereIsBallIn4Secs().x > 0; 
-                    }else{
-                       res = whereIsBallIn4Secs().z > 0
-                               && whereIsBallIn4Secs().x <= 0; 
-                    }
+                    res = whereIsBallIn4Secs().z > 0
+                               && this.player.getTeam().nearestDefensorBall().equals(this.player);
+                    
                 }
                 return res;
             }
@@ -393,56 +367,6 @@ public class DefensorController extends AbstractControl{
                 return new Vector3f(x,y,z);
             }
             
-            private void aprenderPasar(Player pToPass) throws FileNotFoundException, IOException, Exception{
-                
-                Vector3f direction = pToPass.getGeometry().getWorldTranslation().subtract(this.player.getBall().getGeometry().getWorldTranslation()).normalize();
-                float distance = pToPass.getGeometry().getWorldTranslation().distance(this.player.getGeometry().getWorldTranslation());
-                int modulo = (new Random().nextInt(Defensor.PASAR_MAX)) + Defensor.PASAR_MIN;
-                
-                
-                if(isCorrect(direction, distance, modulo)){
-                    
-                    Instance instance = new Instance(casosDePruebaPasarPelota.numAttributes());
-
-                    instance.setDataset(casosDePruebaPasarPelota);
-
-                    instance.setValue(0, direction.x);
-                    instance.setValue(1, direction.y);
-                    instance.setValue(2, direction.z);
-                    instance.setValue(3, distance);
-                    instance.setValue(4, modulo);
-                    casosDePruebaPasarPelota.add(instance);
-                    conocimientoPasar.buildClassifier(casosDePruebaPasarPelota);
-                }
-                
-                this.disparar(modulo, direction, distance);
-            }
-            
-            private boolean isCorrect(Vector3f direction, float distancia, int modulo){
-                boolean res;
-                Vector3f pos = this.player.getBall().getGeometry().getWorldTranslation();
-                Vector3f velocity = (direction.mult(modulo)).divide(1);
-                float x = pos.x + velocity.x*0.15f*16*0.5f;
-                float y = pos.y;
-                float z = pos.z + velocity.z*0.15f*16*0.5f;
-                Vector3f posFinalIn4Secs = new Vector3f(x,y,z);
-                if(posFinalIn4Secs.distance(pos) <= distancia +1 || posFinalIn4Secs.distance(pos) >= distancia -1){
-                    res = true;
-                }else{
-                    res = false;
-                }
-                return res;
-            }
-            
-            private void disparar(int module, Vector3f direction, float distancia){
-                if(this.hasObstacle(direction, distancia)){
-                    Vector3f arriba = new Vector3f(direction.x, direction.y+0.7f, direction.z).normalize();
-                    this.player.getBall().getPhysics().applyImpulse(arriba.mult(module), Vector3f.ZERO);
-                }else{
-                    this.player.getBall().getPhysics().applyImpulse(direction.mult(module), Vector3f.ZERO);
-                }
-            }
-
     /*      
     *       =============================================================
     *      ||                     /METODOS PRIVADOS                      ||

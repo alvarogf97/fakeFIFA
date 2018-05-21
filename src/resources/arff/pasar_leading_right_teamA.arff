@@ -1,9 +1,0 @@
-@relation pasar
-
-@attribute Direccion(x) numeric
-@attribute Direccion(y) numeric
-@attribute Direccion(z) numeric
-@attribute Distancia numeric
-@attribute Fuerza numeric
-
-@data

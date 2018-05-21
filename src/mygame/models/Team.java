@@ -149,9 +149,10 @@ public class Team {
         Player res = null;
         float min = Float.MAX_VALUE;
         for(Player p : arrayP){
-            if(p.getPropability() < min){
+            float prob = p.getPropability();
+            if(prob < min){
                 res = p;
-                min = p.getPropability();
+                min = prob;
             }
         }
         return res;
@@ -223,6 +224,34 @@ public class Team {
         }
         
         return num;
+    }
+    
+    public synchronized Player nearestDefensorBall(){
+        Player p;
+        float distance_1 = this.defensor_left.getGeometry().getWorldTranslation().distance(this.ball.getGeometry().getWorldTranslation());
+        float distance_2 = this.defensor_right.getGeometry().getWorldTranslation().distance(this.ball.getGeometry().getWorldTranslation());
+        
+        if(distance_1 >= distance_2){
+            p = this.defensor_right;
+        }else{
+            p = this.defensor_left;
+        }
+        
+        return p;
+    }
+    
+    public synchronized Player nearesLeading(){
+        Player p;
+        float distance_1 = this.leading_left.getGeometry().getWorldTranslation().distance(this.ball.getGeometry().getWorldTranslation());
+        float distance_2 = this.leading_right.getGeometry().getWorldTranslation().distance(this.ball.getGeometry().getWorldTranslation());
+        
+        if(distance_1 >= distance_2){
+            p = this.leading_right;
+        }else{
+            p = this.leading_left;
+        }
+        
+        return p;
     }
     
     

@@ -100,6 +100,7 @@ public class Main extends SimpleApplication {
             "pasar_goalKeepper_teamA",
             "pasar_leading_left_teamA",
             "pasar_leading_right_teamA"};
+        
         Material matTeamA = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamA.setTexture("DiffuseMap", assetManager.loadTexture("Materials/naranja.jpg"));
         
@@ -132,6 +133,7 @@ public class Main extends SimpleApplication {
             "pasar_goalKeepper_teamB",
             "pasar_leading_left_teamB",
             "pasar_leading_right_teamB"};
+        
         Material matTeamB = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamB.setTexture("DiffuseMap", assetManager.loadTexture("Materials/azul.png"));
         
