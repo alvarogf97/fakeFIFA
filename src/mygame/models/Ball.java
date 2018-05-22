@@ -92,7 +92,7 @@ public class Ball {
     }
     
     public boolean isInInitialPosition(){
-        return this.init_position.equals(this.spehere.getWorldTranslation());
+        return this.init_position.distance(this.spehere.getWorldTranslation())<=0.75f;
     }
 
     public Node getTeamA() {

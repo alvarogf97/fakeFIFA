@@ -94,7 +94,8 @@ public abstract class Player {
     }
     
     public boolean isInInitialPosition(){
-        return this.init_position.equals(box.getWorldTranslation());
+        //calculamos en un area
+        return this.init_position.distance(box.getWorldTranslation())<=2;
     }
     
     public int getTactic(){

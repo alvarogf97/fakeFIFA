@@ -11,7 +11,9 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
+import mygame.states.Catenacho;
 import mygame.states.Libero;
+import mygame.states.Staccatto;
 import mygame.states.Tactic;
 import mygame.terrain.Goal;
 import mygame.terrain.Matcher;
@@ -139,13 +141,14 @@ public class Team {
     *       =============================================================
     *      ||      DEVUELVE EL MEJOR JUGADOR AL QUE PASARLE LA PELOTA   ||
     *      ||         SI EL JUGADOR DEVUELTO SOY YO, ME MUEVO           ||
+           ||         EL JUGADO DEVUELTO NUNCA SERA EL PORTERO          ||
     *       =============================================================
     */
     public Player whoIsBetterToPassTheBall(){
         //distancia compañero mas cercano
         //distancia porteria enemiga
         //numero oponentes en 10m
-        Player [] arrayP = new Player[]{this.defensor_left, this.defensor_right, this.goalkeeper, this.leading_left, this.leading_right, this.midfield};
+        Player [] arrayP = new Player[]{this.defensor_left, this.defensor_right, this.leading_left, this.leading_right, this.midfield};
         Player res = null;
         float min = Float.MAX_VALUE;
         for(Player p : arrayP){
