@@ -19,7 +19,7 @@ public class Defensor extends Player{
     private boolean right;
     
     public Defensor(Material mat, Team team, Vector3f position, boolean right, String filePasarName) throws IOException {
-        super(mat, team, position, filePasarName);
+        super(mat, team, position, filePasarName, null);
         
         this.right = right;
         DefensorController controller = new DefensorController(this);

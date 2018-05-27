@@ -11,9 +11,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
-import mygame.states.Catenacho;
 import mygame.states.Libero;
-import mygame.states.Staccatto;
 import mygame.states.Tactic;
 import mygame.terrain.Goal;
 import mygame.terrain.Matcher;
@@ -43,7 +41,7 @@ public class Team {
     public Node mates;
     public Ball ball;
     
-    public Team(Material mat, String teamName, Node oponents, Node mates, Ball ball, BulletAppState states, Vector3f [] positions, int terrain, Goal enemyGoal, Matcher matcher, String [] filesPasar) throws IOException{
+    public Team(Material mat, String teamName, Node oponents, Node mates, Ball ball, BulletAppState states, Vector3f [] positions, int terrain, Goal enemyGoal, Matcher matcher, String [] filesPasar, Goal goal) throws IOException{
         
         this.matcher = matcher;
         this.enemyGoal = enemyGoal;
@@ -58,7 +56,7 @@ public class Team {
         this.defensor_left = new Defensor(mat, this, positions[0],false,filesPasar[0]);
         this.defensor_right = new Defensor(mat, this, positions[1],true,filesPasar[1]);
         this.midfield = new Midfield(mat, this, positions[2],filesPasar[2]);
-        this.goalkeeper = new Goalkeeper(mat, this, positions[3],filesPasar[3]);
+        this.goalkeeper = new Goalkeeper(mat, this, positions[3],filesPasar[3],filesPasar[6], goal);
         this.leading_left = new Leading(mat, this, positions[4],filesPasar[4]);
         this.leading_right = new Leading(mat, this, positions[5],filesPasar[5]);
         
@@ -80,6 +78,12 @@ public class Team {
         states.getPhysicsSpace().add(this.leading_right.getFisicas());
         states.getPhysicsSpace().add(this.midfield.getFisicas());
         
+    }
+    
+    public boolean everybodyInInitialPosition(){
+        return this.getDefensor_left().isInInitialPosition() && this.getDefensor_right().isInInitialPosition()
+                && this.getGoalkeeper().isInInitialPosition() && this.getLeading_left().isInInitialPosition()
+                && this.getLeading_right().isInInitialPosition() && this.getMidfield().isInInitialPosition();
     }
     
     public void setTactic(Tactic tactic){

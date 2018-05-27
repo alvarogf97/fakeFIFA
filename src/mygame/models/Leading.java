@@ -15,7 +15,7 @@ import com.jme3.math.Vector3f;
 public class Leading extends Player{
     
     public Leading(Material mat, Team team, Vector3f position, String filePasarName) {
-        super(mat, team, position, filePasarName);
+        super(mat, team, position, filePasarName,null);
         
         // CREAD AQUI LA REFERENCIA AL ABSTRACT CONTROL Y LO QUE NECESITEIS
         

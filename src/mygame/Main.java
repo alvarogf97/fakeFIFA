@@ -99,13 +99,14 @@ public class Main extends SimpleApplication {
             "pasar_midfield_teamA",
             "pasar_goalKeepper_teamA",
             "pasar_leading_left_teamA",
-            "pasar_leading_right_teamA"};
+            "pasar_leading_right_teamA",
+            "stopBall_goalKeeper_teamA"};
         
         Material matTeamA = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamA.setTexture("DiffuseMap", assetManager.loadTexture("Materials/naranja.jpg"));
         
         try {
-            teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA,0, stadium.getPorteria1(), matcher, filesPasarA);
+            teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA,0, stadium.getPorteria1(), matcher, filesPasarA, stadium.getPorteria2());
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -132,13 +133,14 @@ public class Main extends SimpleApplication {
             "pasar_midfield_teamB",
             "pasar_goalKeepper_teamB",
             "pasar_leading_left_teamB",
-            "pasar_leading_right_teamB"};
+            "pasar_leading_right_teamB",
+            "stopBall_goalKeeper_teamB"};
         
         Material matTeamB = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamB.setTexture("DiffuseMap", assetManager.loadTexture("Materials/azul.png"));
         
         try {
-            teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB,1, stadium.getPorteria2(), matcher, filesPasarB);
+            teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB,1, stadium.getPorteria2(), matcher, filesPasarB, stadium.getPorteria1());
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

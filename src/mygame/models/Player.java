@@ -40,10 +40,12 @@ public abstract class Player {
     protected Vector3f init_position;
     protected Vector3f [] directions;
     protected String filePasarName;
+    protected String fileStopBall;
     
     
-    protected Player(Material mat, Team team, Vector3f position, String filePasarName){
+    protected Player(Material mat, Team team, Vector3f position, String filePasarName, String fileStopBall){
         
+        this.fileStopBall = fileStopBall;
         this.filePasarName = filePasarName;
         this.init_position = position;
         this.oponents = team.oponents; 
@@ -211,10 +213,8 @@ public abstract class Player {
         return filePasarName;
     }
     
-    
-    
-    
-    
-    
+    public String getFileStopBallName(){
+        return fileStopBall;
+    }
     
 }

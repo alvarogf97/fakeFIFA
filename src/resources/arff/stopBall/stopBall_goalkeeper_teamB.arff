@@ -1,9 +1,11 @@
-@relation pasar
+@relation parar
 
 @attribute Direccion(x) numeric
 @attribute Direccion(y) numeric
 @attribute Direccion(z) numeric
 @attribute Distancia numeric
+@attribute Tiempo numeric
+@attribute TipoDePase { alto, bajo }
 @attribute Fuerza numeric
 
 @data

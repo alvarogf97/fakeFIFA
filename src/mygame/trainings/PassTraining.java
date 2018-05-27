@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mygame.models.Defensor;
 import mygame.models.Player;
+import mygame.shots.ShotType;
 import weka.classifiers.trees.M5P;
 import weka.core.Instance;
 import weka.core.Instances;

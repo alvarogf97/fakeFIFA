@@ -7,6 +7,9 @@ package mygame.models;
 
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import java.io.IOException;
+import mygame.controllers.GoalkeeperController;
+import mygame.terrain.Goal;
 
 /**
  *
@@ -14,11 +17,11 @@ import com.jme3.math.Vector3f;
  */
 public class Goalkeeper extends Player{
     
-    public Goalkeeper(Material mat, Team team, Vector3f position, String filePasarName) {
-        super(mat, team, position, filePasarName);
+    public Goalkeeper(Material mat, Team team, Vector3f position, String filePasarName, String fileStopBall, Goal goal) throws IOException {
+        super(mat, team, position, filePasarName, fileStopBall);
         
-        // CREAD AQUI LA REFERENCIA AL ABSTRACT CONTROL Y LO QUE NECESITEIS
-        
+        GoalkeeperController controller = new GoalkeeperController(this, goal);
+        this.box.addControl(controller);
     }
     
 }
