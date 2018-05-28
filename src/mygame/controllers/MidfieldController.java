@@ -612,8 +612,13 @@ public class MidfieldController extends AbstractControl {
      */
     private boolean canGoToBallInLibero() {
         boolean res = false;
+        
         if (this.player.getGeometry().getWorldTranslation().z < 75 && this.player.getGeometry().getWorldTranslation().z > -75 && !myteamhastheball2secs()) {
-            res = PlayerUtilities.WhereShouldIGo(player).z < 50 && PlayerUtilities.WhereShouldIGo(player).z > -50;
+            if(this.player.getTeam().getTerrain()==0){
+                res = PlayerUtilities.WhereShouldIGo(player).z < 100 && PlayerUtilities.WhereShouldIGo(player).z > -75;
+            }else{
+                res = PlayerUtilities.WhereShouldIGo(player).z > -100 && PlayerUtilities.WhereShouldIGo(player).z < 75;
+            }
         }
 
         return res;
