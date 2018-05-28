@@ -193,10 +193,10 @@ public class DefensorController extends AbstractControl{
                                         if(!pToPass.equals(this.player)){
                                             
                                             // para la fase de entrenamiento
-                                            //this.passTraining.learn(pToPass);
+                                            this.passTraining.learn(pToPass);
                                             
                                             //funcionamiento entrenado
-                                            this.passTraining.useKnowledge(pToPass);
+                                            //this.passTraining.useKnowledge(pToPass);
                                             
                                             
                                         }
