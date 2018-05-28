@@ -7,18 +7,33 @@ package mygame.models;
 
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
+import java.io.IOException;
+import mygame.controllers.LeadingController;
 
 /**
  *
- * @author Alvaro
+ * @author Alberto
  */
 public class Leading extends Player{
     
-    public Leading(Material mat, Team team, Vector3f position, String filePasarName) {
+    private boolean right;
+    private String fileChutarName;
+    
+    public Leading(Material mat, Team team, Vector3f position, boolean right, String filePasarName, String fileChutarName) throws IOException {
         super(mat, team, position, filePasarName);
         
-        // CREAD AQUI LA REFERENCIA AL ABSTRACT CONTROL Y LO QUE NECESITEIS
-        
+        this.fileChutarName = fileChutarName;
+        this.right = right;
+        LeadingController controller = new LeadingController(this);
+        this.box.addControl(controller);
+
     }
     
-}
+    public boolean isRight(){
+        return this.right;
+    }
+        
+    public String getFileChutarName() {
+        return fileChutarName;
+    }
+} 

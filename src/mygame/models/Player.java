@@ -211,10 +211,9 @@ public abstract class Player {
         return filePasarName;
     }
     
-    
-    
-    
-    
-    
-    
+    public void shoot(int module, Vector3f direction){
+            this.getBall().getPhysics().applyImpulse(direction.mult(module), Vector3f.ZERO);
+            System.out.println(direction.y+" "+ module);       
+    }
+  
 }

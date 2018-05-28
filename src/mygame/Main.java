@@ -101,11 +101,15 @@ public class Main extends SimpleApplication {
             "pasar_leading_left_teamA",
             "pasar_leading_right_teamA"};
         
+        String [] filesChutarA = new String[]{
+            "chutar_leading_left_teamA",
+            "chutar_leading_right_teamA"};
+        
         Material matTeamA = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamA.setTexture("DiffuseMap", assetManager.loadTexture("Materials/naranja.jpg"));
         
         try {
-            teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA,0, stadium.getPorteria1(), matcher, filesPasarA);
+            teamA = new Team(matTeamA, "JUGADOR", teamBNode, teamANode, ball, states, positionsA,0, stadium.getPorteria1(), matcher, filesPasarA, filesChutarA);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,8 +127,8 @@ public class Main extends SimpleApplication {
             new Vector3f(-33.5f,2,+50), //defensor_right
             new Vector3f(0f,2,+29.3f), //midfield
             new Vector3f(0f,2,+85f), //goalkeeper
-            new Vector3f(+33.5f,2,-25.5f), //leading_left
-            new Vector3f(-33.5f,2,-25.5f)  //leading_right
+            new Vector3f(-33.5f,2,-25.5f), //leading_left
+            new Vector3f(+33.5f,2,-25.5f)  //leading_right
         };
         String [] filesPasarB = new String[]{
             "pasar_defensor_left_teamB",
@@ -134,11 +138,15 @@ public class Main extends SimpleApplication {
             "pasar_leading_left_teamB",
             "pasar_leading_right_teamB"};
         
+        String [] filesChutarB = new String[]{
+            "chutar_leading_left_teamB",
+            "chutar_leading_right_teamB"};
+        
         Material matTeamB = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamB.setTexture("DiffuseMap", assetManager.loadTexture("Materials/azul.png"));
         
         try {
-            teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB,1, stadium.getPorteria2(), matcher, filesPasarB);
+            teamB = new Team(matTeamB, "JUGADOR", teamANode, teamBNode, ball, states, positionsB,1, stadium.getPorteria2(), matcher, filesPasarB, filesChutarB);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
