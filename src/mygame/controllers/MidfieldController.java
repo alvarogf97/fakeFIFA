@@ -189,10 +189,10 @@ public class MidfieldController extends AbstractControl {
                 if (!pToPass.equals(this.player)) {
 
                     // para la fase de entrenamiento
-                    //this.passTraining.learn(pToPass);
+                    this.passTraining.learn(pToPass);
 
                     //funcionamiento entrenado
-                    this.passTraining.useKnowledge(pToPass);
+                    //this.passTraining.useKnowledge(pToPass);
                 }/*
                                 *       =============================================================
                                 *      ||                   SI DECIDO MOVERME                       ||
@@ -526,7 +526,7 @@ public class MidfieldController extends AbstractControl {
                                             this.passTraining.learn(pToPass);
                                             
                                             //funcionamiento entrenado
-                                            //this.passTraining.useKnowledge(pToPass);
+                                            this.passTraining.useKnowledge(pToPass);
                                             
                                             
                                         }
