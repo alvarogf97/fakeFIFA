@@ -27,4 +27,6 @@ public class Vector3fUtilities {
         return (float) Math.sqrt(x_2+y_2+z_2);
     }
     
+    
+    
 }

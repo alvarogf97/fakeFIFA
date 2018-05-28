@@ -134,7 +134,7 @@ public class LeadingController extends AbstractControl{
                             Vector3f direction;
                             
                             if(!entrePelotayPorteria(middlePosition.subtract(this.player.getGeometry().getWorldTranslation()))){
-                                direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+                                direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                             } else {
                                 direction = this.player.getBall().getGeometry().getWorldTranslation().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                             }
@@ -218,7 +218,7 @@ public class LeadingController extends AbstractControl{
                                             if(aprendiendo){
                                             // para la fase de entrenamiento
                                             this.shootTraining.learn(this.player.getTeam().getEnemyGoal());
-                                            this.player.getTeam().predictBall(ShotType.ALTO);
+                                            this.player.getTeam().predictBall(ShotType.BAJO);
                                             }else{
                                             //funcionamiento entrenado
                                             this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
@@ -339,7 +339,7 @@ public class LeadingController extends AbstractControl{
                             Vector3f direction;
                             
                             if(!entrePelotayPorteria(middlePosition.subtract(this.player.getGeometry().getWorldTranslation()))){
-                                direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+                                direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                             } else {
                                 direction = this.player.getBall().getGeometry().getWorldTranslation().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                             }
@@ -473,7 +473,7 @@ public class LeadingController extends AbstractControl{
                             Vector3f direction;
                             
                             if(!entrePelotayPorteria(middlePosition.subtract(this.player.getGeometry().getWorldTranslation()))){
-                                direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+                                direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                             } else {
                                 direction = this.player.getBall().getGeometry().getWorldTranslation().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                             }
@@ -678,11 +678,11 @@ public class LeadingController extends AbstractControl{
             private boolean canGoToBallInLibero(){
                 boolean res;
                 if(this.player.getTeam().getTerrain() == 0){
-                    res = whereIsBallIn4Secs().z > 0
+                    res = PlayerUtilities.WhereShouldIGo(player).z > 0
                                && this.player.getTeam().nearesLeading().equals(this.player)
                                && !this.player.getBall().isInInitialPosition();
                 }else{
-                    res = whereIsBallIn4Secs().z < 0
+                    res = PlayerUtilities.WhereShouldIGo(player).z < 0
                                && this.player.getTeam().nearesLeading().equals(this.player)
                                && !this.player.getBall().isInInitialPosition();
                     
@@ -693,10 +693,10 @@ public class LeadingController extends AbstractControl{
             private boolean canGoToBallInStaccatto(){
                 boolean res;
                 if(this.player.getTeam().getTerrain() == 0){
-                    res = whereIsBallIn4Secs().z > 25
+                    res = PlayerUtilities.WhereShouldIGo(player).z > 25
                                && !this.player.getBall().isInInitialPosition();
                 }else{
-                    res = whereIsBallIn4Secs().z < 25
+                    res = PlayerUtilities.WhereShouldIGo(player).z < 25
                                && !this.player.getBall().isInInitialPosition();
                     
                 }
@@ -706,11 +706,11 @@ public class LeadingController extends AbstractControl{
             private boolean canGoToBallInCatenacho(){
                 boolean res;
                 if(this.player.getTeam().getTerrain() == 0){
-                    res = whereIsBallIn4Secs().z > -25
+                    res = PlayerUtilities.WhereShouldIGo(player).z > -25
                                && this.player.getTeam().nearesLeading().equals(this.player)
                                && !this.player.getBall().isInInitialPosition();
                 }else{
-                    res = whereIsBallIn4Secs().z < 25
+                    res = PlayerUtilities.WhereShouldIGo(player).z < 25
                                && this.player.getTeam().nearesLeading().equals(this.player)
                                && !this.player.getBall().isInInitialPosition();
                     
@@ -726,15 +726,6 @@ public class LeadingController extends AbstractControl{
                     res = !this.player.isRight();
                 }
                 return res;
-            }
-            
-            private Vector3f whereIsBallIn4Secs(){
-                Vector3f pos = this.player.getBall().getGeometry().getWorldTranslation();
-                Vector3f velocity = this.player.getBall().getPhysics().getLinearVelocity();
-                float x = pos.x + velocity.x*0.15f*16*0.5f;
-                float y = pos.y;
-                float z = pos.z + velocity.z*0.15f*16*0.5f;
-                return new Vector3f(x,y,z);
             }
             
             

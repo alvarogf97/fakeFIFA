@@ -37,9 +37,7 @@ public class GoalkeeperController extends AbstractControl{
     private float instanteT = 0;
     private Vector3f vector = new Vector3f();
     private ShotType tipoDisparo;
-    
-    private Vector3f direccion;
-    private float velocidadRequerida;
+   
     
     public GoalkeeperController(Goalkeeper player, Goal porteria) throws FileNotFoundException, IOException{
         this.player = player;
@@ -104,9 +102,9 @@ public class GoalkeeperController extends AbstractControl{
             }
         } else if (predecir == true) {
             if (instanteT >= 0) {
-                direccion = vector.subtract(spatial.getWorldTranslation());
+                Vector3f direccion = vector.subtract(spatial.getWorldTranslation());
                 float distancia = vector.distance(spatial.getWorldTranslation());
-                velocidadRequerida = (distancia) / instanteT;
+                float velocidadRequerida = (distancia) / instanteT;
                 //PREDICCION
                 float fuerza; // = this.stopBallTraining.useKnowledge(vector.clone(), instanteT, tipoDisparo);
                 if(vector.x <= 6 && vector.x >= -6 && vector.y <= porteria.getHeight()+0.4f && vector.y >= 1.58f){

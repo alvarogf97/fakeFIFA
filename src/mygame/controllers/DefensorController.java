@@ -118,7 +118,7 @@ public class DefensorController extends AbstractControl{
                 *       =============================================================
                 */
                         }else if(canGoToBallInLibero()){
-                                Vector3f direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+                                Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                                 if(PlayerUtilities.hasObstacle(this.player,direction)){
                                     //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
                                     Vector3f esquiva;
@@ -193,10 +193,10 @@ public class DefensorController extends AbstractControl{
                                         if(!pToPass.equals(this.player)){
                                             
                                             // para la fase de entrenamiento
-                                            this.passTraining.learn(pToPass);
+                                            //this.passTraining.learn(pToPass);
                                             
                                             //funcionamiento entrenado
-                                            //this.passTraining.useKnowledge(pToPass);
+                                            this.passTraining.useKnowledge(pToPass);
                                             
                                             
                                         }
@@ -302,7 +302,7 @@ public class DefensorController extends AbstractControl{
                 *       =============================================================
                 */
                         }else if(canGoToBallInStaccatto()){
-                                Vector3f direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+                                Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                                 if(PlayerUtilities.hasObstacle(this.player,direction)){
                                     //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
                                     Vector3f esquiva;
@@ -474,7 +474,7 @@ public class DefensorController extends AbstractControl{
                 *       =============================================================
                 */
                         }else if(canGoToBallInCatenacho()){
-                                Vector3f direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+                                Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                                 if(PlayerUtilities.hasObstacle(this.player,direction)){
                                     //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
                                     Vector3f esquiva;
@@ -656,11 +656,11 @@ public class DefensorController extends AbstractControl{
             private boolean canGoToBallInLibero(){
                 boolean res;
                 if(this.player.getTeam().getTerrain() == 0){
-                    res = whereIsBallIn4Secs().z < 25
+                    res = PlayerUtilities.WhereShouldIGo(player).z < 25
                                && this.player.getTeam().nearestDefensorBall().equals(this.player)
                                && !this.player.getBall().isInInitialPosition();
                 }else{
-                    res = whereIsBallIn4Secs().z > -25
+                    res = PlayerUtilities.WhereShouldIGo(player).z > -25
                                && this.player.getTeam().nearestDefensorBall().equals(this.player)
                                && !this.player.getBall().isInInitialPosition();
                     
@@ -671,10 +671,10 @@ public class DefensorController extends AbstractControl{
             private boolean canGoToBallInStaccatto(){
                 boolean res;
                 if(this.player.getTeam().getTerrain() == 0){
-                    res = whereIsBallIn4Secs().z < 75
+                    res = PlayerUtilities.WhereShouldIGo(player).z < 75
                                && !this.player.getBall().isInInitialPosition();
                 }else{
-                    res = whereIsBallIn4Secs().z > -75
+                    res = PlayerUtilities.WhereShouldIGo(player).z > -75
                                && !this.player.getBall().isInInitialPosition();
                     
                 }
@@ -684,10 +684,10 @@ public class DefensorController extends AbstractControl{
             private boolean canGoToBallInCatenacho(){
                 boolean res;
                 if(this.player.getTeam().getTerrain() == 0){
-                    res = whereIsBallIn4Secs().z < 0
+                    res = PlayerUtilities.WhereShouldIGo(player).z < 0
                                && !this.player.getBall().isInInitialPosition();
                 }else{
-                    res = whereIsBallIn4Secs().z > 0
+                    res = PlayerUtilities.WhereShouldIGo(player).z > 0
                                && !this.player.getBall().isInInitialPosition();
                     
                 }
@@ -702,15 +702,6 @@ public class DefensorController extends AbstractControl{
                     res = !this.player.isRight();
                 }
                 return res;
-            }
-            
-            private Vector3f whereIsBallIn4Secs(){
-                Vector3f pos = this.player.getBall().getGeometry().getWorldTranslation();
-                Vector3f velocity = this.player.getBall().getPhysics().getLinearVelocity();
-                float x = pos.x + velocity.x*0.15f*16*0.5f;
-                float y = pos.y;
-                float z = pos.z + velocity.z*0.15f*16*0.5f;
-                return new Vector3f(x,y,z);
             }
             
             private boolean isTooBack() {

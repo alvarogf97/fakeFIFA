@@ -118,7 +118,7 @@ public class MidfieldController extends AbstractControl {
                 *       =============================================================
              */
         } else if (canGoToBallInLibero()) {
-            Vector3f direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+            Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
             if (PlayerUtilities.hasObstacle(this.player, direction)) {
                 //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
                 Vector3f esquiva;
@@ -189,10 +189,10 @@ public class MidfieldController extends AbstractControl {
                 if (!pToPass.equals(this.player)) {
 
                     // para la fase de entrenamiento
-                    this.passTraining.learn(pToPass);
+                    //this.passTraining.learn(pToPass);
 
                     //funcionamiento entrenado
-                    //this.passTraining.useKnowledge(pToPass);
+                    this.passTraining.useKnowledge(pToPass);
                 }/*
                                 *       =============================================================
                                 *      ||                   SI DECIDO MOVERME                       ||
@@ -284,7 +284,7 @@ public class MidfieldController extends AbstractControl {
                 *       =============================================================
              */
         } else if (canGoToBallInStaccatto()) {
-            Vector3f direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+            Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
             if (PlayerUtilities.hasObstacle(this.player, direction)) {
                 //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
                 Vector3f esquiva;
@@ -450,7 +450,7 @@ public class MidfieldController extends AbstractControl {
                 *       =============================================================
                 */
                         }else if(canGoToBallInCatenacho()){
-                                Vector3f direction = whereIsBallIn4Secs().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+                                Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                                 if(PlayerUtilities.hasObstacle(this.player,direction)){
                                     //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
                                     Vector3f esquiva;
@@ -603,7 +603,7 @@ public class MidfieldController extends AbstractControl {
     private boolean canGoToBallInLibero() {
         boolean res = false;
         if (this.player.getGeometry().getWorldTranslation().z < 75 && this.player.getGeometry().getWorldTranslation().z > -75) {
-            res = whereIsBallIn4Secs().z < 50 && whereIsBallIn4Secs().z > -50;
+            res = PlayerUtilities.WhereShouldIGo(player).z < 50 && PlayerUtilities.WhereShouldIGo(player).z > -50;
         }
 
         return res;
@@ -617,9 +617,9 @@ public class MidfieldController extends AbstractControl {
                 boolean res;
                 
                 if(this.player.getTeam().getTerrain() == 0){
-                    res = whereIsBallIn4Secs().z < 25;
+                    res = PlayerUtilities.WhereShouldIGo(player).z < 25;
                 }else{
-                    res = whereIsBallIn4Secs().z > -25;   
+                    res = PlayerUtilities.WhereShouldIGo(player).z > -25;   
                 }
                 return res;
             }
@@ -630,14 +630,7 @@ public class MidfieldController extends AbstractControl {
      * @return La posicion donde estará la pelota dentro de 4 segundos
      *
      */
-    private Vector3f whereIsBallIn4Secs() {
-        Vector3f pos = this.player.getBall().getGeometry().getWorldTranslation();
-        Vector3f velocity = this.player.getBall().getPhysics().getLinearVelocity();
-        float x = pos.x + velocity.x * 0.15f * 16 * 0.5f;
-        float y = pos.y;
-        float z = pos.z + velocity.z * 0.15f * 16 * 0.5f;
-        return new Vector3f(x, y, z);
-    }
+    
 
     private boolean dodgeSideRight() {
         return true;

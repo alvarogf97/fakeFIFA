@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import mygame.models.Leading;
 import mygame.models.Player;
 import mygame.terrain.Goal;
-import mygame.utils.PlayerUtilities;
 import weka.classifiers.trees.M5P;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -32,8 +31,8 @@ public class ShootTraining {
     private Instances casosDePruebaChutar;
     private M5P conocimientoChutar;
     private boolean build;
-    private final static int CHUTAR_MAX = 75;
-    private final static int CHUTAR_MIN = 50;
+    private final static int CHUTAR_MAX = 40;
+    private final static int CHUTAR_MIN = 20;
     
     public ShootTraining(Leading player) throws FileNotFoundException, IOException{
         this.pathFile = System.getProperty("user.dir") + "/src/resources/arff/chutar/" + player.getFileChutarName() + ".arff";
