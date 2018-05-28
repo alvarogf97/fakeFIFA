@@ -17,9 +17,7 @@ import mygame.controllers.MidfieldController;
 public class Midfield extends Player{
     
     public Midfield(Material mat, Team team, Vector3f position, String filePasarName) throws IOException {
-        super(mat, team, position,filePasarName);
-        
-        // CREAD AQUI LA REFERENCIA AL ABSTRACT CONTROL Y LO QUE NECESITEIS
+        super(mat, team, position,filePasarName,null);
         MidfieldController control= new MidfieldController(this);
         this.box.addControl(control);
     }

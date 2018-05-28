@@ -40,10 +40,12 @@ public abstract class Player {
     protected Vector3f init_position;
     protected Vector3f [] directions;
     protected String filePasarName;
+    protected String fileStopBall;
     
     
-    protected Player(Material mat, Team team, Vector3f position, String filePasarName){
+    protected Player(Material mat, Team team, Vector3f position, String filePasarName, String fileStopBall){
         
+        this.fileStopBall = fileStopBall;
         this.filePasarName = filePasarName;
         this.init_position = position;
         this.oponents = team.oponents; 
@@ -57,6 +59,34 @@ public abstract class Player {
         hasBall = false;
         
         physics = new RigidBodyControl(1);
+        box.addControl(physics); 
+        
+        directions = new Vector3f[]{new Vector3f(1,0,0),
+                                    new Vector3f(1,0,1),
+                                    new Vector3f(0,0,1),
+                                    new Vector3f(-1,0,1),
+                                    new Vector3f(-1,0,0),
+                                    new Vector3f(-1,0,-1),
+                                    new Vector3f(0,0,-1),
+                                    new Vector3f(1,0,-1)};
+    }
+    
+    protected Player(Material mat, Team team, Vector3f position, String filePasarName, String fileStopBall, int weight){
+        
+        this.fileStopBall = fileStopBall;
+        this.filePasarName = filePasarName;
+        this.init_position = position;
+        this.oponents = team.oponents; 
+        this.mates = team.mates;
+        this.ball = team.ball;
+        
+        this.team = team;
+        box = new Geometry(team.getTeamName(), new Box(1, 1, 1));
+        box.setMaterial(mat);
+        box.move(position);
+        hasBall = false;
+        
+        physics = new RigidBodyControl(weight);
         box.addControl(physics); 
         
         directions = new Vector3f[]{new Vector3f(1,0,0),
@@ -154,7 +184,7 @@ public abstract class Player {
     }
     
     public float getPropability(){
-        return this.distNearestMate(this.box.getWorldTranslation()) + 
+        return  
                 this.distToEnemyGoal(this.box.getWorldTranslation()) + 
                 this.getEnemyNumberIn10m(this.box.getWorldTranslation());
     }
@@ -215,5 +245,11 @@ public abstract class Player {
             this.getBall().getPhysics().applyImpulse(direction.mult(module), Vector3f.ZERO);
             System.out.println(direction.y+" "+ module);       
     }
+    
+     public String getFileStopBallName(){
+        return fileStopBall;
+    }
   
+    
+    
 }

@@ -20,13 +20,11 @@ public class Leading extends Player{
     private String fileChutarName;
     
     public Leading(Material mat, Team team, Vector3f position, boolean right, String filePasarName, String fileChutarName) throws IOException {
-        super(mat, team, position, filePasarName);
-        
+        super(mat, team, position, filePasarName,null);
         this.fileChutarName = fileChutarName;
         this.right = right;
         LeadingController controller = new LeadingController(this);
         this.box.addControl(controller);
-
     }
     
     public boolean isRight(){

@@ -204,7 +204,6 @@ public class MidfieldController extends AbstractControl {
 
                     if (this.player.getTeam().getNumberOfMaterInMyTerrain() >= 3 || isTooBack()) {
                         //hacia delante
-                        System.out.println(isTooBack());
                         direction = this.player.getTeam().getEnemyGoal().getMiddlePosition().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                     } else {
                         //hacia atras
