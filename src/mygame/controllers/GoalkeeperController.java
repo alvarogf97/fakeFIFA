@@ -69,7 +69,6 @@ public class GoalkeeperController extends AbstractControl{
         
         if(restarted == false && player.getTeam().everybodyInInitialPosition()){
             player.getBall().setReady();
-            System.out.println("equipo: " + this.player.getTeam().getTeamName() + " -> listo");
             restarted = true;
         }
         

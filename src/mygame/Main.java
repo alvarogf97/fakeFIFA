@@ -169,6 +169,8 @@ public class Main extends SimpleApplication {
         
         ball.setTeamA(teamANode);
         ball.setTeamB(teamBNode);
+        ball.setTeam_A(teamA);
+        ball.setTeam_B(teamB);
         teamA.setOponents(teamBNode);
         teamB.setOponents(teamANode);
 

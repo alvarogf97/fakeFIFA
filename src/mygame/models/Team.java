@@ -11,6 +11,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import java.io.IOException;
 import java.util.concurrent.Semaphore;
+import mygame.shots.ShotType;
 import mygame.states.Libero;
 import mygame.states.Tactic;
 import mygame.terrain.Goal;
@@ -26,7 +27,7 @@ public class Team {
     private Tactic tactic;
     private Player defensor_left;
     private Player defensor_right;
-    private Player goalkeeper;
+    private Goalkeeper goalkeeper;
     private Player leading_left;
     private Player leading_right;
     private Player midfield;
@@ -259,6 +260,14 @@ public class Team {
         }
         
         return p;
+    }
+    
+    public void predictBall(ShotType type){
+        if(this.terrain == 0){
+            this.ball.getTeam_B().goalkeeper.predict(type);
+        }else{
+            this.ball.getTeam_A().goalkeeper.predict(type);
+        }
     }
     
     

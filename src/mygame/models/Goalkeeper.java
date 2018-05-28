@@ -9,6 +9,7 @@ import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import java.io.IOException;
 import mygame.controllers.GoalkeeperController;
+import mygame.shots.ShotType;
 import mygame.terrain.Goal;
 
 /**
@@ -17,12 +18,17 @@ import mygame.terrain.Goal;
  */
 public class Goalkeeper extends Player{
     
+    private GoalkeeperController controller;
     
     public Goalkeeper(Material mat, Team team, Vector3f position, String filePasarName, String fileStopBall, Goal goal) throws IOException {
-        super(mat, team, position, filePasarName,fileStopBall,300);
+        super(mat, team, position, filePasarName,fileStopBall,500);
         this.fileStopBall = fileStopBall;
-        GoalkeeperController controller = new GoalkeeperController(this, goal);
+        this.controller = new GoalkeeperController(this, goal);
         this.box.addControl(controller);
+    }
+    
+    public void predict(ShotType type){
+        controller.predecirPosPelota(type);
     }
    
     

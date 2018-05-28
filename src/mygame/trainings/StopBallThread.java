@@ -21,7 +21,7 @@ class StopBallThread extends Thread {
     private StopBallTraining training;
     private Instance instance;
     
-    public StopBallThread(Player goalkeeper, Double time, StopBallTraining training, Instance instance){
+    public StopBallThread(Player goalkeeper, Float time, StopBallTraining training, Instance instance){
         int milis = (int) (time*1000 + 1000);
         player = goalkeeper;
         this.training = training;

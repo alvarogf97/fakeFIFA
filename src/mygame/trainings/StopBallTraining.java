@@ -37,7 +37,7 @@ public class StopBallTraining extends Training{
         
         Vector3f direction = posPelota.subtract(posPortero).normalize();
         double distance = posPelota.distance(posPortero);
-        Double time = (Double) studyObjects[1];
+        Float time = (Float) studyObjects[1];
         ShotType shot = (ShotType) studyObjects[2];
         float fuerza = 0; // Obtenemos segun la formula la fuerza que hay que ejercer
 

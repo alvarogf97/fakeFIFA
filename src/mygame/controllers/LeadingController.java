@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import mygame.models.Defensor;
 import mygame.models.Leading;
 import mygame.models.Player;
+import mygame.shots.ShotType;
 import mygame.trainings.PassTraining;
 import mygame.trainings.ShootTraining;
 import mygame.utils.PlayerUtilities;
@@ -217,9 +218,11 @@ public class LeadingController extends AbstractControl{
                                             if(aprendiendo){
                                             // para la fase de entrenamiento
                                             this.shootTraining.learn(this.player.getTeam().getEnemyGoal());
+                                            this.player.getTeam().predictBall(ShotType.ALTO);
                                             }else{
                                             //funcionamiento entrenado
                                             this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
+                                            this.player.getTeam().predictBall(ShotType.ALTO);
                                             }
                                             
                                         }

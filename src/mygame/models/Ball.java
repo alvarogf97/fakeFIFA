@@ -32,9 +32,12 @@ public class Ball {
     private Vector3f init_position;
     private Node teamA;
     private Node teamB;
+    private Team team_A;
+    private Team team_B;
     
     public Ball(Material mat, Vector3f position, GoalHelper goalHelper, Matcher matcher, Node teamA, Node teamB){
     
+        
         this.teamA = teamA;
         this.teamB = teamB;
         this.neededRestart = false;
@@ -110,6 +113,24 @@ public class Ball {
     public void setTeamB(Node teamB) {
         this.teamB = teamB;
     }
+
+    public void setTeam_A(Team team_A) {
+        this.team_A = team_A;
+    }
+
+    public void setTeam_B(Team team_B) {
+        this.team_B = team_B;
+    }
+
+    public Team getTeam_A() {
+        return team_A;
+    }
+
+    public Team getTeam_B() {
+        return team_B;
+    }
+    
+    
     
     
     
