@@ -17,6 +17,7 @@ import mygame.models.Defensor;
 import mygame.models.Midfield;
 import mygame.models.Player;
 import mygame.trainings.PassTraining;
+import mygame.trainings.ShootTraining;
 import mygame.utils.PlayerUtilities;
 import mygame.utils.Vector3fUtilities;
 
@@ -25,24 +26,27 @@ import mygame.utils.Vector3fUtilities;
  * @author Alvaro
  */
 public class MidfieldController extends AbstractControl {
-    private float timeball=5;
+
+    private float timeball = 5;
     private Midfield player;
     private PassTraining passTraining;
-
+    private ShootTraining shootTraining;
+    private boolean aprendiendo=true;
     public MidfieldController(Midfield player) throws IOException, FileNotFoundException {
         this.player = player;
         this.passTraining = new PassTraining(player);
+        this.shootTraining=new ShootTraining(player);
     }
 
     @Override
     protected void controlUpdate(float tpf) {
         //Actualizo el tiempo para saber si tengo que ir a por la pelota o no
-        timeball+=tpf;
-        
-        if(this.player.myTeamHaveBall()){
-            timeball=0;
+        timeball += tpf;
+
+        if (this.player.myTeamHaveBall()) {
+            timeball = 0;
         }
-        
+
         /*
         *       =============================================================
         *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
@@ -146,12 +150,25 @@ public class MidfieldController extends AbstractControl {
                 *       ==============================================================================
              */
         } else {
-            if (!this.player.isInInitialPosition()) {
-                this.backToHome(tpf);
+            if (myteamhastheball2secs()) { //SI MI EQUIPO TIENE LA PELOTA ME DESMARCO
+                /*
+                    *       =============================================================
+                    *      ||                 APRENDIENDO A DESMARCARME                 ||
+                    *       =============================================================
+                 */
+
+                Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
+                if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
+                    this.player.getFisicas().applyCentralForce(directionToStandOut.mult(3));
+                }
             } else {
-                this.player.getFisicas().clearForces();
-                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+                if (!this.player.isInInitialPosition()) {
+                    this.backToHome(tpf);
+                } else {
+                    this.player.getFisicas().clearForces();
+                    this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                    this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+                }
             }
         }
 
@@ -247,11 +264,10 @@ public class MidfieldController extends AbstractControl {
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
                     *       =============================================================
              */
- /*
-                            Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
-                            if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
-                                this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
-                            } */
+            /*Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
+            if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
+                this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
+            }*/
         }
     }
 
@@ -314,20 +330,32 @@ public class MidfieldController extends AbstractControl {
                 *       ==============================================================================
              */
         } else {
-            if (!this.player.isInInitialPosition()) {
-                this.backToHome(tpf);
+            if (myteamhastheball2secs()) { //SI MI EQUIPO TIENE LA PELOTA ME DESMARCO
+                /*
+                    *       =============================================================
+                    *      ||                 APRENDIENDO A DESMARCARME                 ||
+                    *       =============================================================
+                 */
+
+                Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
+                if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
+                    this.player.getFisicas().applyCentralForce(directionToStandOut.mult(3));
+                }
             } else {
-                this.player.getFisicas().clearForces();
-                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+
+                if (!this.player.isInInitialPosition()) {
+                    this.backToHome(tpf);
+                } else {
+                    this.player.getFisicas().clearForces();
+                    this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                    this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+                }
             }
         }
     }
 
     private void toDoInStaccattoTacticWithBall(float tpf) throws Exception {
-        
-        
-        
+
         /*
                 *       =============================================================
                 *      ||               SI SOY YO QUIEN TIENE LA PELOTA             ||
@@ -346,7 +374,7 @@ public class MidfieldController extends AbstractControl {
                 this.player.setHasBall(false); // he perdido la pelota
 
             } else {
-
+                
                 /*
                         *       =============================================================
                         *      ||      DEBO DECIDIR SI PASARLA, TIRAR A PUERTA O MOVERME CON LA PELOTA      ||
@@ -370,12 +398,17 @@ public class MidfieldController extends AbstractControl {
 
                     //funcionamiento entrenado
                     //this.passTraining.useKnowledge(pToPass);
+                }else if(puedoChutar()){
+                    if (aprendiendo) {
+                        // para la fase de entrenamiento
+                        this.shootTraining.learn(this.player.getTeam().getEnemyGoal());
+                    } else {
+                        //funcionamiento entrenado
+                        this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
+                    }
+                    
+                    
                 }
-                /*
-                                *       =============================================================
-                                *      ||                   SI DECIDO TIRAR A PUERTA                       ||
-                                *       =============================================================
-                 */ 
                 
                 
                 
@@ -383,9 +416,7 @@ public class MidfieldController extends AbstractControl {
                                 *       =============================================================
                                 *      ||                   SI DECIDO MOVERME                       ||
                                 *       =============================================================
-                 */ 
-                
-                else {
+                 */ else {
                     // EN STACCATTO SIEMPRE ME MUEVO HACIA DELANTE
 
                     Vector3f direction;
@@ -394,9 +425,9 @@ public class MidfieldController extends AbstractControl {
                     if (PlayerUtilities.hasObstacle(this.player, direction)) {
                         Vector3f esquiva;
                         this.player.getFisicas().clearForces();
-                        
+
                         esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x + 10, 0, 0).normalize();
-                        
+
                         this.player.getFisicas().applyCentralForce(esquiva.mult(5));
                         this.player.getBall().getPhysics().applyImpulse(esquiva.mult(5), Vector3f.ZERO);
                     } else {
@@ -416,11 +447,10 @@ public class MidfieldController extends AbstractControl {
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
                     *       =============================================================
              */
- /*
-                            Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
-                            if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
-                                this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
-                            } */
+            /*Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
+            if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
+                this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
+            }*/
         }
     }
 
@@ -429,177 +459,162 @@ public class MidfieldController extends AbstractControl {
     *      ||                     /TACTICA STACATTO                      ||
     *       =============================================================
      */
-    /*
+ /*
     *       =============================================================
     *      ||                     TACTICA CATENACHO                      ||
     *       =============================================================
      */
-    
-    
-     private void toDoInCatenachoTacticWithoutBall(float tpf){
-                /*
+    private void toDoInCatenachoTacticWithoutBall(float tpf) {
+        /*
                 *       =============================================================
                 *      ||          SI LA PELOTA PASA POR MI LADO LA HE ROBADO       ||
                 *       =============================================================
-                */
-                        if(this.player.getGeometry().getWorldTranslation().distance
-                            (this.player.getBall().getGeometry().getWorldTranslation()) 
-                                    < Midfield.ROUNDED_AREA){
+         */
+        if (this.player.getGeometry().getWorldTranslation().distance(this.player.getBall().getGeometry().getWorldTranslation())
+                < Midfield.ROUNDED_AREA) {
 
-                                this.player.getBall().getPhysics().clearForces();
-                                this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
-                                this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
-                                this.player.getFisicas().clearForces();
-                                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-                                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
-                                this.player.setHasBall(true);
+            this.player.getBall().getPhysics().clearForces();
+            this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
+            this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
+            this.player.getFisicas().clearForces();
+            this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+            this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+            this.player.setHasBall(true);
 
-                /*
+            /*
                 *       =============================================================
                 *      ||   SI NO, INTENTO ROBARLA SIEMPRE QUE PUEDA IR POR ELLA    ||
                 *       =============================================================
-                */
-                        }else if(canGoToBallInCatenacho()){
-                                Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
-                                if(PlayerUtilities.hasObstacle(this.player,direction)){
-                                    //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
-                                    Vector3f esquiva;
-                                    this.player.getFisicas().clearForces();
-                                    
-                                    esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x+10,0,0).normalize();
-                                    
-                                    this.player.getFisicas().applyCentralForce(esquiva.mult(5));
-                                }else{
-                                    if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
-                                        this.player.getFisicas().applyCentralForce(direction.mult(5));
-                                    }
-                                    
-                                }
-                /*
+             */
+        } else if (canGoToBallInCatenacho()) {
+            Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
+            if (PlayerUtilities.hasObstacle(this.player, direction)) {
+                //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
+                Vector3f esquiva;
+                this.player.getFisicas().clearForces();
+
+                esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x + 10, 0, 0).normalize();
+
+                this.player.getFisicas().applyCentralForce(esquiva.mult(5));
+            } else {
+                if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
+                    this.player.getFisicas().applyCentralForce(direction.mult(5));
+                }
+
+            }
+            /*
                 *       ==============================================================================
                 *      ||   SI NO, IRE A MI POSICIÓN INICIAL Y ESPERARE A PODER IR A POR LA PELOTA   ||
                 *       ==============================================================================
-                */
-                        }else{
-                            if(!this.player.isInInitialPosition()){
-                                this.backToHome(tpf);
-                            }else{
-                                this.player.getFisicas().clearForces();
-                                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-                                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
-                            }
-                        }
-            }
+             */
+        } else {
             
-            private void toDoInCatenachoTacticWithBall(float tpf) throws Exception{
-/*
+
+                if (!this.player.isInInitialPosition()) {
+                    this.backToHome(tpf);
+                } else {
+                    this.player.getFisicas().clearForces();
+                    this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                    this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+                }
+            
+        }
+    }
+
+    private void toDoInCatenachoTacticWithBall(float tpf) throws Exception {
+        /*
                 *       =============================================================
                 *      ||               SI SOY YO QUIEN TIENE LA PELOTA             ||
                 *       =============================================================
-                */
-                        if(player.hasBall()){
+         */
+        if (player.hasBall()) {
 
-                    /*
+            /*
                     *       =============================================================
                     *      ||          SI PIERDO LA PELOTA TENGO QUE DECIRLO            ||
                     *       =============================================================
-                    */
-                            if(this.player.getGeometry().getWorldTranslation().distance
-                            (this.player.getBall().getGeometry().getWorldTranslation()) 
-                                > Defensor.ROUNDED_AREA){
+             */
+            if (this.player.getGeometry().getWorldTranslation().distance(this.player.getBall().getGeometry().getWorldTranslation())
+                    > Defensor.ROUNDED_AREA) {
 
-                                this.player.setHasBall(false); // he perdido la pelota
+                this.player.setHasBall(false); // he perdido la pelota
 
-                            }else{
+            } else {
 
-                        /*
+                /*
                         *       =============================================================
                         *      ||      DEBO DECIDIR SI PASARLA O MOVERME CON LA PELOTA      ||
                         *       =============================================================
-                        */
+                 */
+                // limpio las fuerzas de la pelota
+                this.player.getBall().getPhysics().clearForces();
+                this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
+                this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
+                Player pToPass = this.player.getTeam().whoIsBetterToPassTheBall();
 
-                                // limpio las fuerzas de la pelota
-                                this.player.getBall().getPhysics().clearForces();
-                                this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
-                                this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
-                                Player pToPass = this.player.getTeam().whoIsBetterToPassTheBall();
-
-                                /*
+                /*
                                 *       =============================================================
                                 *      ||             SI DECIDO PASARLA -> APRENDO                  ||
                                 *       =============================================================
-                                */
+                 */
+                if (!pToPass.equals(this.player)) {
 
-                                        if(!pToPass.equals(this.player)){
-                                            
-                                            // para la fase de entrenamiento
-                                            this.passTraining.learn(pToPass);
-                                            
-                                            //funcionamiento entrenado
-                                            this.passTraining.useKnowledge(pToPass);
-                                            
-                                            
-                                        }
-                                        
+                    // para la fase de entrenamiento
+                    this.passTraining.learn(pToPass);
 
-                                /*
+                    //funcionamiento entrenado
+                    this.passTraining.useKnowledge(pToPass);
+
+                } /*
                                 *       =============================================================
                                 *      ||                   SI DECIDO MOVERME                       ||
                                 *       =============================================================
-                                */
+                 */ else {
+                    // EN LIBERO CATENACHO SIEMPRE HACIA ATRAS
 
-                                        else{
-                                            // EN LIBERO CATENACHO SIEMPRE HACIA ATRAS
-                                            
-                                            Vector3f direction;
-                                            direction = this.player.getTeam().getGoalkeeper().getGeometry().getWorldTranslation().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
-                                            
-                                            
-                                            if(PlayerUtilities.hasObstacle(this.player,direction)){
-                                                Vector3f esquiva;
-                                                this.player.getFisicas().clearForces();
-                                                if(dodgeSideRight()){
-                                                    esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x+10,0,0).normalize();
-                                                }else{
-                                                    esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x-10,0,0).normalize();
-                                                }
-                                                this.player.getFisicas().applyCentralForce(esquiva.mult(5)); 
-                                                this.player.getBall().getPhysics().applyImpulse(esquiva.mult(5), Vector3f.ZERO);
-                                            }else{
-                                              if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
-                                                    this.player.getFisicas().applyCentralForce(direction.mult(5));
-                                                    this.player.getBall().getPhysics().applyImpulse(direction.mult(5), Vector3f.ZERO);
-                                                }  
-                                            }
-                                        }
+                    Vector3f direction;
+                    direction = this.player.getTeam().getGoalkeeper().getGeometry().getWorldTranslation().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
 
+                    if (PlayerUtilities.hasObstacle(this.player, direction)) {
+                        Vector3f esquiva;
+                        this.player.getFisicas().clearForces();
+                        if (dodgeSideRight()) {
+                            esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x + 10, 0, 0).normalize();
+                        } else {
+                            esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x - 10, 0, 0).normalize();
+                        }
+                        this.player.getFisicas().applyCentralForce(esquiva.mult(5));
+                        this.player.getBall().getPhysics().applyImpulse(esquiva.mult(5), Vector3f.ZERO);
+                    } else {
+                        if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
+                            this.player.getFisicas().applyCentralForce(direction.mult(5));
+                            this.player.getBall().getPhysics().applyImpulse(direction.mult(5), Vector3f.ZERO);
+                        }
                     }
+                }
 
-                /*
+            }
+
+            /*
                 *       =============================================================
                 *      ||   SI NO TENGO LA PELOTA PERO MI EQUIPO SI, ME DESMARCO    ||
                 *       =============================================================
-                */
-                }else{
+             */
+        } else {
 
-                    /*
+            /*
                     *       =============================================================
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
                     *       =============================================================
-                    */
-                    
-                            /*
-                            Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
-                            if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
-                                this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
-                            } */
-
-                }
+             */
+            Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
+            if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
+                this.player.getFisicas().applyCentralForce(directionToStandOut.mult(3));
             }
-    
-    
-    
-    
+
+        }
+    }
+
     /*
     *       =============================================================
     *      ||                     METODOS PRIVADOS                      ||
@@ -612,11 +627,11 @@ public class MidfieldController extends AbstractControl {
      */
     private boolean canGoToBallInLibero() {
         boolean res = false;
-        
+
         if (this.player.getGeometry().getWorldTranslation().z < 75 && this.player.getGeometry().getWorldTranslation().z > -75 && !myteamhastheball2secs()) {
-            if(this.player.getTeam().getTerrain()==0){
+            if (this.player.getTeam().getTerrain() == 0) {
                 res = PlayerUtilities.WhereShouldIGo(player).z < 100 && PlayerUtilities.WhereShouldIGo(player).z > -75;
-            }else{
+            } else {
                 res = PlayerUtilities.WhereShouldIGo(player).z > -100 && PlayerUtilities.WhereShouldIGo(player).z < 75;
             }
         }
@@ -627,17 +642,17 @@ public class MidfieldController extends AbstractControl {
     private boolean canGoToBallInStaccatto() {
         return !myteamhastheball2secs();
     }
-    
-    private boolean canGoToBallInCatenacho(){
-                boolean res;
-                
-                if(this.player.getTeam().getTerrain() == 0){
-                    res = PlayerUtilities.WhereShouldIGo(player).z < 25 /*&& !myteamhastheball2secs()*/;
-                }else{
-                    res = PlayerUtilities.WhereShouldIGo(player).z > -25 && !myteamhastheball2secs();   
-                }
-                return res;
-            }
+
+    private boolean canGoToBallInCatenacho() {
+        boolean res;
+
+        if (this.player.getTeam().getTerrain() == 0) {
+            res = PlayerUtilities.WhereShouldIGo(player).z < 25 /*&& !myteamhastheball2secs()*/;
+        } else {
+            res = PlayerUtilities.WhereShouldIGo(player).z > -25 && !myteamhastheball2secs();
+        }
+        return res;
+    }
 
     /**
      * Hace un calculo de donde se encontrara la pelota en 4 segundos
@@ -645,8 +660,6 @@ public class MidfieldController extends AbstractControl {
      * @return La posicion donde estará la pelota dentro de 4 segundos
      *
      */
-    
-
     private boolean dodgeSideRight() {
         return true;
     }
@@ -658,7 +671,7 @@ public class MidfieldController extends AbstractControl {
      * la que el jugador debe volver a su posicion
      */
     private void backToHome(float tpf) {
-        
+
         if (!this.player.isInInitialPosition()) {
             Vector3f direction = player.getInitPosition().subtract(player.getGeometry().getWorldTranslation()).normalize();
             if (PlayerUtilities.hasObstacle(this.player, direction)) {
@@ -669,7 +682,7 @@ public class MidfieldController extends AbstractControl {
             }
         } else {
             //la paramos
-            timeball=5;
+            timeball = 5;
             player.getFisicas().clearForces();
             player.getFisicas().setLinearVelocity(Vector3f.ZERO);
         }
@@ -685,17 +698,18 @@ public class MidfieldController extends AbstractControl {
         return res;
     }
 
-    private boolean myteamhastheball2secs(){
-        boolean res=false;
-        
-        
-        if(timeball<2){
-            res=true;
+    private boolean myteamhastheball2secs() {
+        boolean res = false;
+
+        if (timeball < 2) {
+            res = true;
         }
 
         return res;
     }
     
-    
-    
+    private boolean puedoChutar(){
+       float dist= this.player.getTeam().getEnemyGoal().getMiddlePosition().distance(this.player.getGeometry().getWorldTranslation()) ;
+       return dist<17;
+    }
 }

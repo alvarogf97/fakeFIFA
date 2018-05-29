@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.concurrent.Semaphore;
 import mygame.shots.ShotType;
 import mygame.states.Libero;
+import mygame.states.Staccatto;
 import mygame.states.Tactic;
 import mygame.terrain.Goal;
 import mygame.terrain.Matcher;
@@ -54,9 +55,10 @@ public class Team {
         this.tactic = new Libero();
         semaphore = new Semaphore(1, true);
         
+        
         this.defensor_left = new Defensor(mat, this, positions[0],false,filesPasar[0]);
         this.defensor_right = new Defensor(mat, this, positions[1],true,filesPasar[1]);
-        this.midfield = new Midfield(mat, this, positions[2],filesPasar[2]);
+        this.midfield = new Midfield(mat, this, positions[2],filesPasar[2],filesChutar[2]);
         this.goalkeeper = new Goalkeeper(mat, this, positions[3],filesPasar[3],filesPasar[6],goal);
         this.leading_left = new Leading(mat, this, positions[4], false, filesPasar[4], filesChutar[0]);
         this.leading_right = new Leading(mat, this, positions[5],true, filesPasar[5], filesChutar[1]);

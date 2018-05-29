@@ -15,11 +15,18 @@ import mygame.controllers.MidfieldController;
  * @author Alvaro
  */
 public class Midfield extends Player{
-    
-    public Midfield(Material mat, Team team, Vector3f position, String filePasarName) throws IOException {
+    private String fileChutarName;
+    public Midfield(Material mat, Team team, Vector3f position, String filePasarName, String chutar) throws IOException {
         super(mat, team, position,filePasarName,null);
+        fileChutarName=chutar;
         MidfieldController control= new MidfieldController(this);
         this.box.addControl(control);
+        
+        System.out.println(chutar);
+    }
+    
+    public String getFileChutarName(){
+        return fileChutarName;
     }
     
 }

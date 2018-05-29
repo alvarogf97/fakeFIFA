@@ -16,6 +16,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mygame.models.Leading;
+import mygame.models.Midfield;
 import mygame.models.Player;
 import mygame.shots.ShotType;
 import mygame.terrain.Goal;
@@ -38,6 +39,16 @@ public class ShootTraining {
     
     public ShootTraining(Leading player) throws FileNotFoundException, IOException{
         this.pathFile = System.getProperty("user.dir") + "/src/resources/arff/chutar/" + player.getFileChutarName() + ".arff";
+        this.player = player;
+        this.casosDePruebaChutar = new Instances(new BufferedReader(new FileReader(pathFile)));
+        casosDePruebaChutar.setClassIndex(4);
+        this.conocimientoChutar = new M5P();
+        build = false;
+    }
+    
+    public ShootTraining(Midfield player) throws FileNotFoundException, IOException{
+        this.pathFile = System.getProperty("user.dir") + "/src/resources/arff/chutar/" + player.getFileChutarName() + ".arff";
+        System.out.println(this.pathFile);
         this.player = player;
         this.casosDePruebaChutar = new Instances(new BufferedReader(new FileReader(pathFile)));
         casosDePruebaChutar.setClassIndex(4);
