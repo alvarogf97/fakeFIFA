@@ -21,8 +21,6 @@ public class Midfield extends Player{
         fileChutarName=chutar;
         MidfieldController control= new MidfieldController(this);
         this.box.addControl(control);
-        
-        System.out.println(chutar);
     }
     
     public String getFileChutarName(){
