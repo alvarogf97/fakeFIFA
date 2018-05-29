@@ -1,0 +1,14 @@
+@relation pasar
+
+@attribute Direccion(x) numeric
+@attribute Direccion(y) numeric
+@attribute Direccion(z) numeric
+@attribute Distancia numeric
+@attribute Fuerza numeric
+
+@data
+-0.255453,0.005771,0.966804,122.151863,21
+-0.255453,0.005771,0.966804,122.152031,14
+-0.255453,0.005771,0.966804,122.154259,22
+-0.255459,0.005744,0.966803,122.156609,19
+-0.255467,0.005047,0.966805,122.158585,25

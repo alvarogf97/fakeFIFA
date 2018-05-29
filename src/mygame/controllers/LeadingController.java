@@ -36,6 +36,8 @@ public class LeadingController extends AbstractControl{
     private Player companion;
     Vector3f middlePosition;
     boolean aprendiendo = true;
+    boolean puedeChutar = true;
+    float time_between_shot = 0;
     
     public LeadingController(Leading player) throws FileNotFoundException, IOException{
         this.player = player;
@@ -53,6 +55,14 @@ public class LeadingController extends AbstractControl{
         *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
         *       =============================================================
         */
+                if(time_between_shot < 300 && puedeChutar==false){
+                    time_between_shot += tpf;
+                }else{
+                    time_between_shot = 0;
+                    puedeChutar = true;
+                }
+                
+                
                 switch(this.player.getTactic()){
                     case 0:  if(player.myTeamHaveBall()){
                                 try {
@@ -214,7 +224,7 @@ public class LeadingController extends AbstractControl{
                                 *       =============================================================
                                 */
                                 
-                                        if(this.closeToGoal(middlePosition, posBall) && !PlayerUtilities.hasObstacle(this.player,middlePosition.subtract(posBall))){
+                                        if(puedeChutar &&this.closeToGoal(middlePosition, posBall) && !PlayerUtilities.hasObstacle(this.player,middlePosition.subtract(posBall))){
                                             if(aprendiendo){
                                             // para la fase de entrenamiento
                                             this.shootTraining.learn(this.player.getTeam().getEnemyGoal());
@@ -222,8 +232,10 @@ public class LeadingController extends AbstractControl{
                                             }else{
                                             //funcionamiento entrenado
                                             this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
-                                            this.player.getTeam().predictBall(ShotType.BAJO);
+                                            this.player.getTeam().predictBall(ShotType.ALTO);
+                                            
                                             }
+                                            puedeChutar=false;
                                             
                                         }
 

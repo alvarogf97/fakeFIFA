@@ -242,8 +242,7 @@ public abstract class Player {
     }
     
     public void shoot(int module, Vector3f direction){
-            this.getBall().getPhysics().applyImpulse(direction.mult(module), Vector3f.ZERO);
-            System.out.println(direction.y+" "+ module);       
+            this.getBall().getPhysics().applyImpulse(direction.mult(module), Vector3f.ZERO);    
     }
     
      public String getFileStopBallName(){
