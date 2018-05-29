@@ -657,11 +657,13 @@ public class DefensorController extends AbstractControl{
                 boolean res;
                 if(this.player.getTeam().getTerrain() == 0){
                     res = PlayerUtilities.WhereShouldIGo(player).z < 25
-                               && this.player.getTeam().nearestDefensorBall().equals(this.player)
+                               && (this.player.getTeam().nearestDefensorBall().equals(this.player) 
+                               || this.player.getBall().getGeometry().getWorldTranslation().z<=-40)
                                && !this.player.getBall().isInInitialPosition();
                 }else{
                     res = PlayerUtilities.WhereShouldIGo(player).z > -25
-                               && this.player.getTeam().nearestDefensorBall().equals(this.player)
+                               && (this.player.getTeam().nearestDefensorBall().equals(this.player)
+                               || this.player.getBall().getGeometry().getWorldTranslation().z>=40)
                                && !this.player.getBall().isInInitialPosition();
                     
                 }

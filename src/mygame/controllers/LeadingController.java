@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import mygame.models.Defensor;
 import mygame.models.Leading;
 import mygame.models.Player;
-import mygame.shots.ShotType;
 import mygame.trainings.PassTraining;
 import mygame.trainings.ShootTraining;
 import mygame.utils.PlayerUtilities;
@@ -36,7 +35,6 @@ public class LeadingController extends AbstractControl{
     private Player companion;
     Vector3f middlePosition;
     boolean aprendiendo = true;
-    boolean puedeChutar = true;
     float time_between_shot = 0;
     
     public LeadingController(Leading player) throws FileNotFoundException, IOException{
@@ -55,11 +53,9 @@ public class LeadingController extends AbstractControl{
         *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
         *       =============================================================
         */
-                if(time_between_shot < 300 && puedeChutar==false){
+                if(time_between_shot < 3){
+                    System.out.println(time_between_shot);
                     time_between_shot += tpf;
-                }else{
-                    time_between_shot = 0;
-                    puedeChutar = true;
                 }
                 
                 
@@ -199,7 +195,7 @@ public class LeadingController extends AbstractControl{
                                 > Leading.ROUNDED_AREA){
 
                                 this.player.setHasBall(false); // he perdido la pelota
-                            }else{
+                            }else if(time_between_shot>=3){
 
                         /*
                         *       =============================================================
@@ -211,7 +207,7 @@ public class LeadingController extends AbstractControl{
                                 this.player.getBall().getPhysics().clearForces();
                                 this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
                                 this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
-                                Player pToPass = this.player.getTeam().whoIsBetterToPassTheBall();  
+                                
                                 if(this.player.isRight()){
                                     companion = this.player.getTeam().getLeading_left();
                                 } else {
@@ -224,19 +220,15 @@ public class LeadingController extends AbstractControl{
                                 *       =============================================================
                                 */
                                 
-                                        if(puedeChutar &&this.closeToGoal(middlePosition, posBall) && !PlayerUtilities.hasObstacle(this.player,middlePosition.subtract(posBall))){
+                                        if(this.closeToGoal(middlePosition, posBall) && !PlayerUtilities.hasObstacle(this.player,middlePosition.subtract(posBall).normalize())){
                                             if(aprendiendo){
-                                            // para la fase de entrenamiento
-                                            this.shootTraining.learn(this.player.getTeam().getEnemyGoal());
-                                            this.player.getTeam().predictBall(ShotType.BAJO);
+                                                // para la fase de entrenamiento
+                                                this.shootTraining.learn(this.player.getTeam().getEnemyGoal());
                                             }else{
-                                            //funcionamiento entrenado
-                                            this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
-                                            this.player.getTeam().predictBall(ShotType.ALTO);
-                                            
+                                                //funcionamiento entrenado
+                                                this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
                                             }
-                                            puedeChutar=false;
-                                            
+                                            time_between_shot=0;
                                         }
 
                                 /*
@@ -247,11 +239,11 @@ public class LeadingController extends AbstractControl{
                                         
                                         else if(!nearestToGoal(companion)){
                                             if(aprendiendo){
-                                            // para la fase de entrenamiento
-                                            this.passTraining.learn(companion);
+                                                // para la fase de entrenamiento
+                                                this.passTraining.learn(companion);
                                             }else{
-                                            //funcionamiento entrenado
-                                            this.passTraining.useKnowledge(companion);
+                                                //funcionamiento entrenado
+                                                this.passTraining.useKnowledge(companion);
                                             }
                                             
                                         }
@@ -281,7 +273,7 @@ public class LeadingController extends AbstractControl{
                                                 this.player.getBall().getPhysics().applyImpulse(esquiva.mult(6), Vector3f.ZERO);
                                             }else{
                                               if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){
-                                                    this.player.getFisicas().applyCentralForce(direction.mult(6));
+                                                    this.player.getFisicas().applyCentralForce(direction.mult(10));
                                                     this.player.getBall().getPhysics().applyImpulse(direction.mult(6), Vector3f.ZERO);
                                                 }  
                                             }
@@ -742,7 +734,7 @@ public class LeadingController extends AbstractControl{
             
             
             private boolean closeToGoal(Vector3f posPorteria, Vector3f posPlayer) {
-                return posPorteria.distance(posPlayer) < 50 && (posPlayer.z < 95 && posPlayer.z > -95);
+                return posPorteria.distance(posPlayer) < 40 && (posPlayer.z < 95 && posPlayer.z > -95);
             }
             
             private boolean nearestToGoal(Player companion){

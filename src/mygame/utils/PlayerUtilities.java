@@ -62,7 +62,8 @@ public class PlayerUtilities {
     
     public static Vector3f WhereShouldIGo(Player player){
         if(player.getTeam().getTerrain() == 0){
-            if(player.getBall().getGeometry().getWorldTranslation().z>=player.getBall().getGeometry().getWorldTranslation().z){
+            if(player.getBall().getGeometry().getWorldTranslation().z>=player.getBall().getGeometry().getWorldTranslation().z
+                    && player.getBall().getGeometry().getWorldTranslation().z>=-60){
                 Vector3f pos = player.getBall().getGeometry().getWorldTranslation();
                 Vector3f velocity = player.getBall().getPhysics().getLinearVelocity();
                 float x = pos.x + velocity.x * 0.15f * -4 * 0.5f;
@@ -78,7 +79,8 @@ public class PlayerUtilities {
                 return new Vector3f(x, y, z);
             }
         }else{
-            if(player.getBall().getGeometry().getWorldTranslation().z<=player.getBall().getGeometry().getWorldTranslation().z){
+            if(player.getBall().getGeometry().getWorldTranslation().z<=player.getBall().getGeometry().getWorldTranslation().z
+                    && player.getBall().getGeometry().getWorldTranslation().z<=60){
                 Vector3f pos = player.getBall().getGeometry().getWorldTranslation();
                 Vector3f velocity = player.getBall().getPhysics().getLinearVelocity();
                 float x = pos.x + velocity.x * 0.15f * -4 * 0.5f;
