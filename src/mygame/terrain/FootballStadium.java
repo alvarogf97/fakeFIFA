@@ -6,6 +6,7 @@
 package mygame.terrain;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
@@ -68,6 +69,42 @@ public class FootballStadium {
         Material matInvisible = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         matInvisible.setColor("Color", new ColorRGBA(0, 0, 0, 0f));
         matInvisible.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        
+        //Paredes EXTRA
+        /*
+        Geometry pared_front_1 = new Geometry("pared_front_1",new Box(ANCHO_CAMPO/2 -LARGO_PORTERIA/4,25,1));
+        Geometry pared_back_1 = new Geometry("pared_front_1",new Box(ANCHO_CAMPO/2 -LARGO_PORTERIA/4,25,1)); 
+        Geometry pared_front_2 = new Geometry("pared_front_1",new Box(ANCHO_CAMPO/2 -LARGO_PORTERIA/4,25,1));
+        Geometry pared_back_2 = new Geometry("pared_front_1",new Box(ANCHO_CAMPO/2 -LARGO_PORTERIA/4,25,1));
+        Geometry pared_front_lateral_1 = new Geometry("pared_front_1",new Box(0.5f,25,10));
+        Geometry pared_front_lateral_2 = new Geometry("pared_front_1",new Box(0.5f,25,10));
+        Geometry pared_back_lateral_1 = new Geometry("pared_front_1",new Box(0.5f,25,10));
+        Geometry pared_back_lateral_2 = new Geometry("pared_front_1",new Box(0.5f,25,10));
+        
+        pared_front_1.move(-(ANCHO_CAMPO +LARGO_PORTERIA/2)/2,1,LARGO_CAMPO-10);
+        pared_front_1.setMaterial(matInvisible);
+        pared_front_2.move((ANCHO_CAMPO +LARGO_PORTERIA/2)/2,1,LARGO_CAMPO-10);
+        pared_front_2.setMaterial(matInvisible);
+        pared_front_lateral_1.move(porteria1.getLeftPosition().x,1,LARGO_CAMPO);
+        pared_front_lateral_1.setMaterial(matInvisible);
+        pared_front_lateral_2.move(porteria1.getRightPosition().x,1,LARGO_CAMPO);
+        pared_front_lateral_2.setMaterial(matInvisible);
+        
+        pared_back_1.move(-(ANCHO_CAMPO +LARGO_PORTERIA/2)/2,1,-(LARGO_CAMPO-10));
+        pared_back_1.setMaterial(matInvisible);
+        pared_back_2.move((ANCHO_CAMPO +LARGO_PORTERIA/2)/2,1,-(LARGO_CAMPO-10));
+        pared_back_2.setMaterial(matInvisible);
+        pared_back_lateral_1.move(porteria1.getLeftPosition().x,1,-LARGO_CAMPO);
+        pared_back_lateral_1.setMaterial(matInvisible);
+        pared_back_lateral_2.move(porteria1.getRightPosition().x,1,-LARGO_CAMPO);
+        pared_back_lateral_2.setMaterial(matInvisible);
+        
+        campoDeFutbol.attachChild(pared_front_1);campoDeFutbol.attachChild(pared_back_1);
+        campoDeFutbol.attachChild(pared_front_2);campoDeFutbol.attachChild(pared_back_2);
+        campoDeFutbol.attachChild(pared_front_lateral_1);campoDeFutbol.attachChild(pared_front_lateral_2);
+        campoDeFutbol.attachChild(pared_back_lateral_1);campoDeFutbol.attachChild(pared_back_lateral_2);
+        */
+        //Paredes EXTRA
         
         Box b = new Box(ANCHO_CAMPO,25,1);
         Box b2 = new Box(LARGO_CAMPO,25,1);
