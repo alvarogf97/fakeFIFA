@@ -222,7 +222,7 @@ public class LeadingController extends AbstractControl{
                                             }else{
                                             //funcionamiento entrenado
                                             this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
-                                            this.player.getTeam().predictBall(ShotType.ALTO);
+                                            this.player.getTeam().predictBall(ShotType.BAJO);
                                             }
                                             
                                         }

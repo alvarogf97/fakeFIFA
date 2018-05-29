@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mygame.models.Leading;
 import mygame.models.Player;
+import mygame.shots.ShotType;
 import mygame.terrain.Goal;
 import weka.classifiers.trees.M5P;
 import weka.core.Instance;
@@ -31,6 +32,7 @@ public class ShootTraining {
     private Instances casosDePruebaChutar;
     private M5P conocimientoChutar;
     private boolean build;
+    private boolean alto = false;
     private final static int CHUTAR_MAX = 40;
     private final static int CHUTAR_MIN = 20;
     
@@ -67,6 +69,10 @@ public class ShootTraining {
         }
 
         this.player.shoot(modulo, direction);
+        if(alto)
+            player.getTeam().predictBall(ShotType.ALTO);
+        else
+            player.getTeam().predictBall(ShotType.BAJO);
     }
     
     public void useKnowledge(Goal goal) throws Exception{
@@ -96,6 +102,10 @@ public class ShootTraining {
         }
         
         this.player.shoot(modulo, direction);
+        if(alto)
+            player.getTeam().predictBall(ShotType.ALTO);
+        else
+            player.getTeam().predictBall(ShotType.BAJO);
     }
     
     private void saveData(Instance instance){
@@ -126,12 +136,20 @@ public class ShootTraining {
     
     private Vector3f aimShoot(Goal goal){
         float x;
+        float y;
         if(new Random().nextBoolean()){
             x = goal.getRightPosition().x - new Random().nextInt(5);
         } else {
             x = goal.getLeftPosition().x + new Random().nextInt(5);
         } 
-        float y = goal.getHeight();
+        if(new Random().nextBoolean()){
+            y = 0;
+            alto = false;
+        }else{
+            y = goal.getHeight();
+            alto = true;
+        }
+        
         float z = goal.getMiddlePosition().z;
         if(z > 0)
             z = +100;
