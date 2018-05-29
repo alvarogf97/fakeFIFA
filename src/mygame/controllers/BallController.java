@@ -71,9 +71,9 @@ public class BallController extends AbstractControl{
                 if((results_teamA.size()>0 && avant(results_teamA.getClosestCollision().getGeometry()))
                   ||results_teamB.size()>0 && avant(results_teamB.getClosestCollision().getGeometry())){
                     Vector3f esquiva = new Vector3f(ball.getGeometry().getWorldTranslation().x+10,0,0).normalize();
-                    ball.getPhysics().setLinearVelocity(esquiva.mult(ball.VELOCITY_TO_COME_BACK*tpf));
+                    ball.getPhysics().setLinearVelocity(esquiva.mult(ball.VELOCITY_TO_COME_BACK*2*tpf));
                 }else{
-                   ball.getPhysics().setLinearVelocity(direction.mult(ball.VELOCITY_TO_COME_BACK*tpf)); 
+                   ball.getPhysics().setLinearVelocity(direction.mult(ball.VELOCITY_TO_COME_BACK*2*tpf)); 
                 }
             }else{
                 //la paramos

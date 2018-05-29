@@ -25,7 +25,7 @@ import mygame.utils.Vector3fUtilities;
  * @author Alvaro
  */
 public class MidfieldController extends AbstractControl {
-
+    private float timeball=5;
     private Midfield player;
     private PassTraining passTraining;
 
@@ -36,6 +36,13 @@ public class MidfieldController extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
+        //Actualizo el tiempo para saber si tengo que ir a por la pelota o no
+        timeball+=tpf;
+        
+        if(this.player.myTeamHaveBall()){
+            timeball=0;
+        }
+        
         /*
         *       =============================================================
         *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
@@ -318,6 +325,9 @@ public class MidfieldController extends AbstractControl {
     }
 
     private void toDoInStaccattoTacticWithBall(float tpf) throws Exception {
+        
+        
+        
         /*
                 *       =============================================================
                 *      ||               SI SOY YO QUIEN TIENE LA PELOTA             ||
@@ -602,24 +612,29 @@ public class MidfieldController extends AbstractControl {
      */
     private boolean canGoToBallInLibero() {
         boolean res = false;
-        if (this.player.getGeometry().getWorldTranslation().z < 75 && this.player.getGeometry().getWorldTranslation().z > -75) {
-            res = PlayerUtilities.WhereShouldIGo(player).z < 50 && PlayerUtilities.WhereShouldIGo(player).z > -50;
+        
+        if (this.player.getGeometry().getWorldTranslation().z < 75 && this.player.getGeometry().getWorldTranslation().z > -75 && !myteamhastheball2secs()) {
+            if(this.player.getTeam().getTerrain()==0){
+                res = PlayerUtilities.WhereShouldIGo(player).z < 100 && PlayerUtilities.WhereShouldIGo(player).z > -75;
+            }else{
+                res = PlayerUtilities.WhereShouldIGo(player).z > -100 && PlayerUtilities.WhereShouldIGo(player).z < 75;
+            }
         }
 
         return res;
     }
 
     private boolean canGoToBallInStaccatto() {
-        return true;
+        return !myteamhastheball2secs();
     }
     
     private boolean canGoToBallInCatenacho(){
                 boolean res;
                 
                 if(this.player.getTeam().getTerrain() == 0){
-                    res = PlayerUtilities.WhereShouldIGo(player).z < 25;
+                    res = PlayerUtilities.WhereShouldIGo(player).z < 25 /*&& !myteamhastheball2secs()*/;
                 }else{
-                    res = PlayerUtilities.WhereShouldIGo(player).z > -25;   
+                    res = PlayerUtilities.WhereShouldIGo(player).z > -25 && !myteamhastheball2secs();   
                 }
                 return res;
             }
@@ -643,6 +658,7 @@ public class MidfieldController extends AbstractControl {
      * la que el jugador debe volver a su posicion
      */
     private void backToHome(float tpf) {
+        
         if (!this.player.isInInitialPosition()) {
             Vector3f direction = player.getInitPosition().subtract(player.getGeometry().getWorldTranslation()).normalize();
             if (PlayerUtilities.hasObstacle(this.player, direction)) {
@@ -653,6 +669,7 @@ public class MidfieldController extends AbstractControl {
             }
         } else {
             //la paramos
+            timeball=5;
             player.getFisicas().clearForces();
             player.getFisicas().setLinearVelocity(Vector3f.ZERO);
         }
@@ -668,4 +685,17 @@ public class MidfieldController extends AbstractControl {
         return res;
     }
 
+    private boolean myteamhastheball2secs(){
+        boolean res=false;
+        
+        
+        if(timeball<2){
+            res=true;
+        }
+
+        return res;
+    }
+    
+    
+    
 }
