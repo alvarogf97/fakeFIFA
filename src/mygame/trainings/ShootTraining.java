@@ -31,8 +31,8 @@ public class ShootTraining {
     private Instances casosDePruebaChutar;
     private M5P conocimientoChutar;
     private boolean build;
-    private final static int CHUTAR_MAX = 40;
-    private final static int CHUTAR_MIN = 20;
+    private final static int CHUTAR_MAX = 100;
+    private final static int CHUTAR_MIN = 80;
     
     public ShootTraining(Leading player) throws FileNotFoundException, IOException{
         this.pathFile = System.getProperty("user.dir") + "/src/resources/arff/chutar/" + player.getFileChutarName() + ".arff";

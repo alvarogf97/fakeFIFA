@@ -89,7 +89,7 @@ public class Main extends SimpleApplication {
             new Vector3f(-33.5f,2,-50), //defenosr_left
             new Vector3f(+33.5f,2,-50), //defensor_right
             new Vector3f(0f,2,-29.3f), //midfield
-            new Vector3f(0f,2,-85f), //goalkeeper
+            new Vector3f(0f,2,-92f), //goalkeeper
             new Vector3f(-33.5f,2,+25.5f), //leading_left
             new Vector3f(+33.5f,2,+25.5f)  //leading_right
         };
@@ -97,7 +97,7 @@ public class Main extends SimpleApplication {
             "pasar_defensor_left_teamA",
             "pasar_defensor_right_teamA",
             "pasar_midfield_teamA",
-            "pasar_goalKeepper_teamA",
+            "pasar_goalkeeper_teamA",
             "pasar_leading_left_teamA",
             "pasar_leading_right_teamA",
             "stopBall_goalKeeper_teamA"};
@@ -127,7 +127,7 @@ public class Main extends SimpleApplication {
             new Vector3f(+33.5f,2,+50), //defenosr_left
             new Vector3f(-33.5f,2,+50), //defensor_right
             new Vector3f(0f,2,+29.3f), //midfield
-            new Vector3f(0f,2,+85f), //goalkeeper
+            new Vector3f(0f,2,+92f), //goalkeeper
             new Vector3f(-33.5f,2,-25.5f), //leading_left
             new Vector3f(+33.5f,2,-25.5f)  //leading_right
         };
@@ -135,7 +135,7 @@ public class Main extends SimpleApplication {
             "pasar_defensor_left_teamB",
             "pasar_defensor_right_teamB",
             "pasar_midfield_teamB",
-            "pasar_goalKeepper_teamB",
+            "pasar_goalkeeper_teamB",
             "pasar_leading_left_teamB",
             "pasar_leading_right_teamB",
             "stopBall_goalKeeper_teamB"};
