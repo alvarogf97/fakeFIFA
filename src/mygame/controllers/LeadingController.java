@@ -54,7 +54,6 @@ public class LeadingController extends AbstractControl{
         *       =============================================================
         */
                 if(time_between_shot < 3){
-                    System.out.println(time_between_shot);
                     time_between_shot += tpf;
                 }
                 
