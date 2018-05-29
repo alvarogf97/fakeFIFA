@@ -104,7 +104,9 @@ public class Main extends SimpleApplication {
         
         String [] filesChutarA = new String[]{
             "chutar_leading_left_teamA",
-            "chutar_leading_right_teamA"};
+            "chutar_leading_right_teamA",
+            "chutar_midfield_teamA"
+            };
         
         Material matTeamA = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamA.setTexture("DiffuseMap", assetManager.loadTexture("Materials/naranja.jpg"));
@@ -142,7 +144,9 @@ public class Main extends SimpleApplication {
         
         String [] filesChutarB = new String[]{
             "chutar_leading_left_teamB",
-            "chutar_leading_right_teamB"};
+            "chutar_leading_right_teamB",
+            "chutar_midfield_teamB"
+            };
         
         Material matTeamB = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matTeamB.setTexture("DiffuseMap", assetManager.loadTexture("Materials/azul.png"));
