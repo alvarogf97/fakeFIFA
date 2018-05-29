@@ -37,8 +37,8 @@ class StopBallThread extends Thread {
         } catch (InterruptedException ex) {
             Logger.getLogger(StopBallThread.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        if(golesAntes == player.getTeam().getOponentGoals() + 1){
+        System.out.println("tengo que parar");
+        if(golesAntes == player.getTeam().getOponentGoals()){
             try {
                 training.saveInKnowledge(instance);
             } catch (Exception ex) {

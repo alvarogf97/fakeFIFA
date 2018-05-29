@@ -63,7 +63,7 @@ public class ShootTraining {
             casosDePruebaChutar.add(instance);
             conocimientoChutar.buildClassifier(casosDePruebaChutar);
             
-            this.saveData();
+            this.saveData(instance);
         }
 
         this.player.shoot(modulo, direction);
@@ -98,9 +98,9 @@ public class ShootTraining {
         this.player.shoot(modulo, direction);
     }
     
-    private void saveData(){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.pathFile))) {
-            writer.write(casosDePruebaChutar.toString());
+    private void saveData(Instance instance){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.pathFile,true))) {
+            writer.write("\n" + instance.toString());
             writer.flush();
         } catch (IOException e) {
             System.out.println("error al escribir en el fichero");

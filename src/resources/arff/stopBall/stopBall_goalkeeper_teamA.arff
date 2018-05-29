@@ -5,7 +5,7 @@
 @attribute Direccion(z) numeric
 @attribute Distancia numeric
 @attribute Tiempo numeric
-@attribute TipoDePase { alto, bajo }
+@attribute TipoDePase {alto,bajo}
 @attribute Fuerza numeric
 
 @data

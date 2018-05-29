@@ -62,7 +62,7 @@ public class PassTraining {
             casosDePruebaPasarPelota.add(instance);
             conocimientoPasar.buildClassifier(casosDePruebaPasarPelota);
             
-            this.saveData();
+            this.saveData(instance);
         }
 
         this.player.pass(modulo, direction, distance);
@@ -96,9 +96,9 @@ public class PassTraining {
         player.pass(modulo, direction, distance);
     }
     
-    private void saveData(){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.pathFile))) {
-            writer.write(casosDePruebaPasarPelota.toString());
+    private void saveData(Instance instance){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.pathFile,true))) {
+            writer.write("\n" + instance.toString());
             writer.flush();
         } catch (IOException e) {
             System.out.println("error al escribir en el fichero");

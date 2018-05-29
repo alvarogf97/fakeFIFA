@@ -66,7 +66,7 @@ public class StopBallTraining extends Training{
     protected synchronized void saveInKnowledge(Instance instance) throws Exception{
         casosDePrueba.add(instance);
         conocimiento.buildClassifier(casosDePrueba);
-        this.saveData();
+        this.saveData(instance);
     }
     
     /** 

@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import mygame.models.Player;
 import weka.classifiers.trees.M5P;
+import weka.core.Instance;
 import weka.core.Instances;
 
 /**
@@ -53,12 +54,12 @@ public abstract class Training {
      */
     protected abstract boolean isCorrect(Object... studyObjects);
     
-    protected void saveData(){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.pathFile))) {
-            writer.write(casosDePrueba.toString());
+    protected void saveData(Instance instance){
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.pathFile,true))) {
+            writer.write("\n" + instance.toString());
             writer.flush();
         } catch (IOException e) {
-            System.out.println("Error al escribir en el fichero de salida.");
+            System.out.println("error al escribir en el fichero");
         }
     }
     
