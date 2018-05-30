@@ -80,6 +80,7 @@ public class GoalkeeperController extends AbstractControl{
 
             if(restarted == false && player.getTeam().everybodyInInitialPosition()){
                 player.getBall().setReady();
+                player.getTeam().setTactic(new Libero());
                 restarted = true;
             }
 
@@ -109,7 +110,6 @@ public class GoalkeeperController extends AbstractControl{
                     //passTraining.useKnowledge(player.getTeam().whoIsBetterToPassTheBall());
 
                     time_between_pass = 0.5f;
-                    System.out.println("paso la pelota " + pasar.getFilePasarName());
                 } catch (Exception ex) {
                     Logger.getLogger(GoalkeeperController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -215,8 +215,6 @@ public class GoalkeeperController extends AbstractControl{
         vector.x = player.getBall().getGeometry().getWorldTranslation().x + v*(float)Math.cos(alfa)*(float)Math.sin(betta)*instanteT;
 
         vector.y = h + v*(float)Math.sin(alfa)*instanteT - (g*(float)Math.pow(instanteT, 2))/2;
-        System.out.println("Eje y: " + vector.y);
-        System.out.println("EjeY de portero " + spatial.getWorldTranslation().y);
         if(vector.y < 1.58f){
             vector.y = 1.58f;
         }

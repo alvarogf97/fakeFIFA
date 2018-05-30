@@ -28,14 +28,16 @@ import mygame.utils.Vector3fUtilities;
 public class MidfieldController extends AbstractControl {
 
     private float timeball = 5;
+    private float iveball=5;
     private Midfield player;
     private PassTraining passTraining;
     private ShootTraining shootTraining;
-    private boolean aprendiendo=true;
+    private boolean aprendiendo = true;
+
     public MidfieldController(Midfield player) throws IOException, FileNotFoundException {
         this.player = player;
         this.passTraining = new PassTraining(player);
-        this.shootTraining=new ShootTraining(player);
+        this.shootTraining = new ShootTraining(player);
     }
 
     @Override
@@ -43,6 +45,7 @@ public class MidfieldController extends AbstractControl {
         if(!this.player.isPaused()){
             //Actualizo el tiempo para saber si tengo que ir a por la pelota o no
             timeball += tpf;
+            iveball+=tpf;
 
             if (this.player.myTeamHaveBall()) {
                 timeball = 0;
@@ -156,7 +159,7 @@ public class MidfieldController extends AbstractControl {
                 *       ==============================================================================
              */
         } else {
-            if (myteamhastheball2secs()) { //SI MI EQUIPO TIENE LA PELOTA ME DESMARCO
+            if (myteamhastheball2secs() && !iHaveTheBall2secs()) { //SI MI EQUIPO TIENE LA PELOTA PERO NO SOY YO EL QUE LA TINEE ME DESMARCO
                 /*
                     *       =============================================================
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
@@ -165,7 +168,7 @@ public class MidfieldController extends AbstractControl {
 
                 Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
                 if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
-                    this.player.getFisicas().applyCentralForce(directionToStandOut.mult(3));
+                    this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
                 }
             } else {
                 if (!this.player.isInInitialPosition()) {
@@ -188,7 +191,7 @@ public class MidfieldController extends AbstractControl {
                 *       =============================================================
          */
         if (player.hasBall()) {
-
+            iveball=0;
             /*
                     *       =============================================================
                     *      ||          SI PIERDO LA PELOTA TENGO QUE DECIRLO            ||
@@ -202,7 +205,7 @@ public class MidfieldController extends AbstractControl {
 
                 /*
                         *       =============================================================
-                        *      ||      DEBO DECIDIR SI PASARLA O MOVERME CON LA PELOTA      ||
+                        *      ||      DEBO DECIDIR SI PASARLA O MOVERME CON LA PELOTA O TIRAR A PUERTA     ||
                         *       =============================================================
                  */
                 // limpio las fuerzas de la pelota
@@ -213,10 +216,25 @@ public class MidfieldController extends AbstractControl {
 
                 /*
                                 *       =============================================================
-                                *      ||             SI DECIDO PASARLA -> APRENDO                  ||
+                                *      ||             SI DECIDO TIRAR -> APRENDO A TIRAR                  ||
                                 *       =============================================================
                  */
-                if (!pToPass.equals(this.player)) {
+                if (puedoChutar()) {
+                    if (aprendiendo) {
+                        // para la fase de entrenamiento
+                        this.shootTraining.learn(this.player.getTeam().getEnemyGoal());
+                    } else {
+                        //funcionamiento entrenado
+                        this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
+
+                    }
+                    
+                    /*
+                                *       =============================================================
+                                *      ||             SI DECIDO PASAR -> APRENDO A PASAR                  ||
+                                *       =============================================================
+                 */
+                } else if (!pToPass.equals(this.player)) {
 
                     // para la fase de entrenamiento
                     this.passTraining.learn(pToPass);
@@ -232,7 +250,7 @@ public class MidfieldController extends AbstractControl {
 
                     Vector3f direction;
 
-                    if (this.player.getTeam().getNumberOfMaterInMyTerrain() >= 3 || isTooBack()) {
+                    if (this.player.getTeam().getNumberOfMaterInMyTerrain() >= 2 || isTooBack()) {
                         //hacia delante
                         direction = this.player.getTeam().getEnemyGoal().getMiddlePosition().subtract(this.player.getGeometry().getWorldTranslation()).normalize();
                     } else {
@@ -270,7 +288,7 @@ public class MidfieldController extends AbstractControl {
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
                     *       =============================================================
              */
-            /*Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
+ /*Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
             if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
                 this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
             }*/
@@ -336,7 +354,7 @@ public class MidfieldController extends AbstractControl {
                 *       ==============================================================================
              */
         } else {
-            if (myteamhastheball2secs()) { //SI MI EQUIPO TIENE LA PELOTA ME DESMARCO
+            if (myteamhastheball2secs() && !iHaveTheBall2secs()) { //SI MI EQUIPO TIENE LA PELOTA Y NO SOY YO EL QUE LA TIENE
                 /*
                     *       =============================================================
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
@@ -345,7 +363,7 @@ public class MidfieldController extends AbstractControl {
 
                 Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
                 if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
-                    this.player.getFisicas().applyCentralForce(directionToStandOut.mult(3));
+                    this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
                 }
             } else {
 
@@ -368,7 +386,7 @@ public class MidfieldController extends AbstractControl {
                 *       =============================================================
          */
         if (player.hasBall()) {
-
+            iveball=0;
             /*
                     *       =============================================================
                     *      ||          SI PIERDO LA PELOTA TENGO QUE DECIRLO            ||
@@ -380,7 +398,7 @@ public class MidfieldController extends AbstractControl {
                 this.player.setHasBall(false); // he perdido la pelota
 
             } else {
-                
+
                 /*
                         *       =============================================================
                         *      ||      DEBO DECIDIR SI PASARLA, TIRAR A PUERTA O MOVERME CON LA PELOTA      ||
@@ -404,7 +422,7 @@ public class MidfieldController extends AbstractControl {
 
                     //funcionamiento entrenado
                     //this.passTraining.useKnowledge(pToPass);
-                }else if(puedoChutar()){
+                } else if (puedoChutar()) {
                     if (aprendiendo) {
                         // para la fase de entrenamiento
                         this.shootTraining.learn(this.player.getTeam().getEnemyGoal());
@@ -412,13 +430,8 @@ public class MidfieldController extends AbstractControl {
                         //funcionamiento entrenado
                         this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
                     }
-                    
-                    
-                }
-                
-                
-                
-                /*
+
+                } /*
                                 *       =============================================================
                                 *      ||                   SI DECIDO MOVERME                       ||
                                 *       =============================================================
@@ -453,7 +466,7 @@ public class MidfieldController extends AbstractControl {
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
                     *       =============================================================
              */
-            /*Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
+ /*Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
             if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
                 this.player.getFisicas().applyCentralForce(directionToStandOut.mult(5));
             }*/
@@ -514,16 +527,15 @@ public class MidfieldController extends AbstractControl {
                 *       ==============================================================================
              */
         } else {
-            
 
-                if (!this.player.isInInitialPosition()) {
-                    this.backToHome(tpf);
-                } else {
-                    this.player.getFisicas().clearForces();
-                    this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-                    this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
-                }
-            
+            if (!this.player.isInInitialPosition()) {
+                this.backToHome(tpf);
+            } else {
+                this.player.getFisicas().clearForces();
+                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+            }
+
         }
     }
 
@@ -612,12 +624,12 @@ public class MidfieldController extends AbstractControl {
                     *       =============================================================
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
                     *       =============================================================
-             */
+             
             Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
             if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
                 this.player.getFisicas().applyCentralForce(directionToStandOut.mult(3));
             }
-
+             */
         }
     }
 
@@ -697,9 +709,9 @@ public class MidfieldController extends AbstractControl {
     private boolean isTooBack() {
         boolean res;
         if (this.player.getTeam().getTerrain() == 0) {
-            res = this.player.getGeometry().getWorldTranslation().z <= -75;
+            res = this.player.getGeometry().getWorldTranslation().z <= -90;
         } else {
-            res = this.player.getGeometry().getWorldTranslation().z >= 75;
+            res = this.player.getGeometry().getWorldTranslation().z >= 90;
         }
         return res;
     }
@@ -707,15 +719,26 @@ public class MidfieldController extends AbstractControl {
     private boolean myteamhastheball2secs() {
         boolean res = false;
 
-        if (timeball < 2) {
+        if (timeball < 1) {
             res = true;
         }
 
         return res;
     }
     
-    private boolean puedoChutar(){
-       float dist= this.player.getTeam().getEnemyGoal().getMiddlePosition().distance(this.player.getGeometry().getWorldTranslation()) ;
-       return dist<17;
+    private boolean iHaveTheBall2secs(){
+        boolean res = false;
+
+        if (iveball < 2) {
+            res = true;
+        }
+
+        return res;
+    }
+    
+
+    private boolean puedoChutar() {
+        float dist = this.player.getTeam().getEnemyGoal().getMiddlePosition().distance(this.player.getGeometry().getWorldTranslation());
+        return dist < 30;
     }
 }
