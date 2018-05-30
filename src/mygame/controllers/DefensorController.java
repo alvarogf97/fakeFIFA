@@ -41,6 +41,7 @@ public class DefensorController extends AbstractControl{
         *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
         *       =============================================================
         */
+       
                 switch(this.player.getTactic()){
                     case 0:  if(player.myTeamHaveBall()){
                                 try {
@@ -147,6 +148,7 @@ public class DefensorController extends AbstractControl{
                 *       ==============================================================================
                 */
                         }else{
+                            
                             if(!this.player.isInInitialPosition()){
                                 this.backToHome(tpf);
                             }else{
@@ -177,6 +179,7 @@ public class DefensorController extends AbstractControl{
                                 this.player.setHasBall(false); // he perdido la pelota
 
                             }else{
+                                
 
                         /*
                         *       =============================================================
@@ -253,13 +256,13 @@ public class DefensorController extends AbstractControl{
                 *       =============================================================
                 */
                 }else{
-
+                            
                     /*
                     *       =============================================================
                     *      ||                 APRENDIENDO A DESMARCARME                 ||
                     *       =============================================================
                     */
-                    
+                        
                             /*
                             Vector3f directionToStandOut = this.player.getBestDirectionToStandOut();
                             if(Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY){

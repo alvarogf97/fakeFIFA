@@ -17,6 +17,7 @@ import mygame.models.Player;
 public class StatesRecording {
     
     private Vector3f velocity;
+    private Vector3f gravity;
     
     public StatesRecording(){
         
@@ -28,6 +29,7 @@ public class StatesRecording {
     
     public void saveState(Ball ball){
         this.velocity = ball.getPhysics().getLinearVelocity().clone();
+        this.gravity = ball.getPhysics().getGravity().clone();
     }
     
     public void restoreState(Player player){
@@ -36,6 +38,7 @@ public class StatesRecording {
     
     public void restoreState(Ball ball){
         ball.getPhysics().setLinearVelocity(velocity);
+        ball.getPhysics().setGravity(gravity);
     }
     
 }

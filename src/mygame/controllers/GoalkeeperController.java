@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mygame.models.Defensor;
 import mygame.models.Goalkeeper;
 import mygame.models.Player;
 import mygame.shots.ShotType;
@@ -67,7 +68,7 @@ public class GoalkeeperController extends AbstractControl{
 
             if(player.getTeam().getTacticType() == 3){
                 this.backToHome(tpf);
-            }else if(player.getTeam().getTacticType() != 1 && player.getTeam().getTacticType() != 3 && player.getTeam().getOponentGoals() - player.getTeam().getMyGoals() >= 2){
+            }else if(player.getTeam().getTacticType() != 1 && player.getTeam().getTacticType() != 3 && player.getTeam().getOponentGoals() - player.getTeam().getMyGoals() >= 4){
                 player.getTeam().setTactic(new Staccatto());
             }else if(player.getTeam().getTacticType() != 2 && player.getTeam().getTacticType() != 3 && player.getTeam().getMyGoals() - player.getTeam().getOponentGoals() >= 2){
                 player.getTeam().setTactic(new Catenacho());
@@ -93,6 +94,15 @@ public class GoalkeeperController extends AbstractControl{
                 *      ||               PASS BALL               ||
                 *       =========================================
                 */
+                
+            //si pierdo la pelota tengo que decirlo
+            if(this.player.getGeometry().getWorldTranslation().distance
+                            (this.player.getBall().getGeometry().getWorldTranslation()) 
+                                > Defensor.ROUNDED_AREA){
+
+                                this.player.setHasBall(false); // he perdido la pelota
+
+            }
 
             if(time_between_pass <= 0 && player.getBall().getGeometry().getWorldTranslation().distance(player.getGeometry().getWorldTranslation()) <= 2.5f){
                 try {    

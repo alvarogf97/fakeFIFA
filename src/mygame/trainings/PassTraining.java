@@ -44,8 +44,9 @@ public class PassTraining {
     
     public void learn(Player pToPass) throws Exception{
         
-        Vector3f direction = pToPass.getGeometry().getWorldTranslation().subtract(this.player.getBall().getGeometry().getWorldTranslation()).normalize();
-        float distance = pToPass.getGeometry().getWorldTranslation().distance(this.player.getGeometry().getWorldTranslation());
+        Vector3f posFinal = this.possibleFinalPosition(pToPass);
+        Vector3f direction = posFinal.subtract(this.player.getBall().getGeometry().getWorldTranslation()).normalize();
+        float distance = pToPass.getGeometry().getWorldTranslation().distance(posFinal);
         int modulo = (new Random().nextInt(Defensor.PASAR_MAX)) + Defensor.PASAR_MIN;
 
         if (isCorrect(direction, distance, modulo)) {
@@ -110,9 +111,9 @@ public class PassTraining {
         boolean res;
         Vector3f pos = this.player.getBall().getGeometry().getWorldTranslation();
         Vector3f velocity = (direction.mult(modulo)).divide(1);
-        float x = pos.x + velocity.x * 0.15f * 6.25f * 0.5f;
+        float x = pos.x + velocity.x * 0.15f * 9f * 0.5f;
         float y = pos.y;
-        float z = pos.z + velocity.z * 0.15f * 6.25f * 0.5f;
+        float z = pos.z + velocity.z * 0.15f * 9f * 0.5f;
         Vector3f posFinalIn4Secs = new Vector3f(x, y, z);
         res = posFinalIn4Secs.distance(pos) <= distancia + 1 || posFinalIn4Secs.distance(pos) >= distancia - 1;
         return res;
@@ -124,12 +125,12 @@ public class PassTraining {
     }
     
     private Vector3f possibleFinalPosition(Player player){
+        Vector3f dirMoveP = player.getTeam().getEnemyGoal().getMiddlePosition().subtract(player.getGeometry().getWorldTranslation()).normalize();
         Vector3f pos = player.getGeometry().getWorldTranslation();
-        Vector3f velocity = player.getFisicas().getLinearVelocity();
         Vector3f posFinal = new Vector3f(
-                                pos.x + velocity.x * 0.3f * 6.25f * 0.5f,
+                                pos.x + dirMoveP.x * 2f * 6.25f * 0.5f,
                                 pos.y,
-                                pos.z + velocity.z * 0.3f * 6.25f * 0.5f);
+                                pos.z + dirMoveP.z * 2f * 6.25f * 0.5f);
         return posFinal;
     }
 }

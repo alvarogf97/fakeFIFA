@@ -28,8 +28,8 @@ public abstract class Player {
     public static final int VELOCITY_TO_COME_BACK = 3000;
     public static final int MAX_LINEAR_VELOCITY = 10;
     public static final int ROUNDED_AREA = 2;
-    public static final int PASAR_MIN = 5;
-    public static final int PASAR_MAX = 25;
+    public static final int PASAR_MIN = 3;
+    public static final int PASAR_MAX = 20;
     
     protected Team team;
     protected Geometry box;
@@ -192,8 +192,8 @@ public abstract class Player {
     
     public float getPropability(){
         return  
-                this.distToEnemyGoal(this.box.getWorldTranslation()) + 
-                this.getEnemyNumberIn10m(this.box.getWorldTranslation());
+                this.distToEnemyGoal(this.box.getWorldTranslation())*0.35f + 
+                this.getEnemyNumberIn10m(this.box.getWorldTranslation())*0.75f;
     }
     
     private float distToEnemyGoal(Vector3f position){
