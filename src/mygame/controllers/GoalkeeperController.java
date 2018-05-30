@@ -233,6 +233,7 @@ public class GoalkeeperController extends AbstractControl{
             //la paramos
             player.getFisicas().clearForces();
             player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+            player.getFisicas().setAngularVelocity(Vector3f.ZERO);
         }
     }
     
