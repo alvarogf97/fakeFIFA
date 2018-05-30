@@ -68,9 +68,9 @@ public class GoalkeeperController extends AbstractControl{
 
             if(player.getTeam().getTacticType() == 3){
                 this.backToHome(tpf);
-            }else if(player.getTeam().getTacticType() != 1 && player.getTeam().getTacticType() != 3 && player.getTeam().getOponentGoals() - player.getTeam().getMyGoals() >= 4){
+            }else if(player.getTeam().getTacticType() != 1 && player.getTeam().getOponentGoals() - player.getTeam().getMyGoals() >= 4){
                 player.getTeam().setTactic(new Staccatto());
-            }else if(player.getTeam().getTacticType() != 2 && player.getTeam().getTacticType() != 3 && player.getTeam().getMyGoals() - player.getTeam().getOponentGoals() >= 2){
+            }else if(player.getTeam().getTacticType() != 2 && player.getTeam().getMyGoals() - player.getTeam().getOponentGoals() >= 2){
                 player.getTeam().setTactic(new Catenacho());
             }
 
@@ -85,7 +85,7 @@ public class GoalkeeperController extends AbstractControl{
                 restarted = true;
             }
 
-            if(player.getTeam().getTacticType() == 3 && !player.getBall().isNeededRestart()){
+            if(restarted == false && player.getTeam().getTacticType() == 3 && !player.getBall().isNeededRestart()){
                 player.getTeam().setTactic(new Libero());
             }
 
