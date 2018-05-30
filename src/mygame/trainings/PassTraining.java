@@ -75,8 +75,9 @@ public class PassTraining {
         }
         
         int modulo = 0;
-        Vector3f direction = pToPass.getGeometry().getWorldTranslation().subtract(this.player.getBall().getGeometry().getWorldTranslation()).normalize();
-        float distance = pToPass.getGeometry().getWorldTranslation().distance(this.player.getGeometry().getWorldTranslation());
+        Vector3f posFinal = this.possibleFinalPosition(pToPass);
+        Vector3f direction = posFinal.subtract(this.player.getBall().getGeometry().getWorldTranslation()).normalize();
+        float distance = pToPass.getGeometry().getWorldTranslation().distance(posFinal);
         
         Instance instance = new Instance(casosDePruebaPasarPelota.numAttributes());
 
@@ -120,5 +121,15 @@ public class PassTraining {
     private void buildKnowldegeClassifier() throws Exception{
         this.conocimientoPasar.buildClassifier(casosDePruebaPasarPelota);
         this.build = true;
+    }
+    
+    private Vector3f possibleFinalPosition(Player player){
+        Vector3f pos = player.getGeometry().getWorldTranslation();
+        Vector3f velocity = player.getFisicas().getLinearVelocity();
+        Vector3f posFinal = new Vector3f(
+                                pos.x + velocity.x * 0.3f * 6.25f * 0.5f,
+                                pos.y,
+                                pos.z + velocity.z * 0.3f * 6.25f * 0.5f);
+        return posFinal;
     }
 }

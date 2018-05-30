@@ -25,8 +25,8 @@ public class GoalHelper {
     
     public GoalHelper(AssetManager assetManager){
         
-        Box malle_goal_front = new Box(10,8,0.1f);
-        Box malle_goal_back = new Box(10,8,0.1f);
+        Box malle_goal_front = new Box(9,8,0.1f);
+        Box malle_goal_back = new Box(9,8,0.1f);
         
         
         Material matInvisible = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -49,8 +49,8 @@ public class GoalHelper {
         goal_front.setMaterial(matInvisible);
         goal_back.setMaterial(matInvisible);
         
-        goal_front.move(new Vector3f(0,0,-97));
-        goal_back.move(new Vector3f(0,0,97));
+        goal_front.move(new Vector3f(0,0,-90));
+        goal_back.move(new Vector3f(0,0,90));
         
         bound_goal_front.setCenter(goal_front.getWorldTranslation());
         bound_goal_back.setCenter(goal_back.getWorldTranslation());
