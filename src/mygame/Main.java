@@ -3,6 +3,8 @@ package mygame;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -12,6 +14,7 @@ import com.jme3.scene.Node;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import mygame.controllers.PauseController;
 import mygame.models.Ball;
 import mygame.models.Team;
 import mygame.terrain.FootballStadium;
@@ -89,7 +92,7 @@ public class Main extends SimpleApplication {
             new Vector3f(-33.5f,2,-50), //defenosr_left
             new Vector3f(+33.5f,2,-50), //defensor_right
             new Vector3f(0f,2,-29.3f), //midfield
-            new Vector3f(0f,2,-92f), //goalkeeper
+            new Vector3f(0f,2,-85f), //goalkeeper
             new Vector3f(-33.5f,2,+25.5f), //leading_left
             new Vector3f(+33.5f,2,+25.5f)  //leading_right
         };
@@ -129,7 +132,7 @@ public class Main extends SimpleApplication {
             new Vector3f(+33.5f,2,+50), //defenosr_left
             new Vector3f(-33.5f,2,+50), //defensor_right
             new Vector3f(0f,2,+29.3f), //midfield
-            new Vector3f(0f,2,+92f), //goalkeeper
+            new Vector3f(0f,2,+85f), //goalkeeper
             new Vector3f(-33.5f,2,-25.5f), //leading_left
             new Vector3f(+33.5f,2,-25.5f)  //leading_right
         };
@@ -157,6 +160,16 @@ public class Main extends SimpleApplication {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         teams.attachChild(teamANode);
+        
+        /*
+        *       =========================================
+        *      ||      CREATING PAUSE CONTROLLER        ||
+        *       =========================================
+        */
+        
+        PauseController pauseController = new PauseController(teamA, teamB, ball, timer);
+        inputManager.addMapping("space", new KeyTrigger(KeyInput.KEY_SPACE));
+        inputManager.addListener(pauseController, "space");
         
         /*
         *       =========================================

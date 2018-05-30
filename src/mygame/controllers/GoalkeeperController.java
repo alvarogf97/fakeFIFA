@@ -57,124 +57,131 @@ public class GoalkeeperController extends AbstractControl{
     @Override
     protected void controlUpdate(float tpf) {
         
-        /*
-        *       =========================================
-        *      ||                TACTICS                ||
-        *       =========================================
-        */
-        
-        if(player.getTeam().getTacticType() == 3){
-            this.backToHome(tpf);
-        }else if(player.getTeam().getTacticType() != 1 && player.getTeam().getTacticType() != 3 && player.getTeam().getOponentGoals() - player.getTeam().getMyGoals() >= 2){
-            player.getTeam().setTactic(new Staccatto());
-        }else if(player.getTeam().getTacticType() != 2 && player.getTeam().getTacticType() != 3 && player.getTeam().getMyGoals() - player.getTeam().getOponentGoals() >= 2){
-            player.getTeam().setTactic(new Catenacho());
-        }
-        
-        if(restarted == true && player.getBall().isNeededRestart()){
-            restarted = false;
-            player.getTeam().setTactic(new Restarting());
-        }
-        
-        if(restarted == false && player.getTeam().everybodyInInitialPosition()){
-            player.getBall().setReady();
-            restarted = true;
-        }
-        
-        if(player.getTeam().getTacticType() == 3 && !player.getBall().isNeededRestart()){
-            player.getTeam().setTactic(new Libero());
-        }
+        if(!this.player.isPaused()){
         
             /*
             *       =========================================
-            *      ||               PASS BALL               ||
+            *      ||                TACTICS                ||
             *       =========================================
             */
+
+            if(player.getTeam().getTacticType() == 3){
+                this.backToHome(tpf);
+            }else if(player.getTeam().getTacticType() != 1 && player.getTeam().getTacticType() != 3 && player.getTeam().getOponentGoals() - player.getTeam().getMyGoals() >= 2){
+                player.getTeam().setTactic(new Staccatto());
+            }else if(player.getTeam().getTacticType() != 2 && player.getTeam().getTacticType() != 3 && player.getTeam().getMyGoals() - player.getTeam().getOponentGoals() >= 2){
+                player.getTeam().setTactic(new Catenacho());
+            }
+
+            if(restarted == true && player.getBall().isNeededRestart()){
+                restarted = false;
+                player.getTeam().setTactic(new Restarting());
+            }
+
+            if(restarted == false && player.getTeam().everybodyInInitialPosition()){
+                player.getBall().setReady();
+                restarted = true;
+            }
+
+            if(player.getTeam().getTacticType() == 3 && !player.getBall().isNeededRestart()){
+                player.getTeam().setTactic(new Libero());
+            }
+
+                /*
+                *       =========================================
+                *      ||               PASS BALL               ||
+                *       =========================================
+                */
+
+            if(time_between_pass <= 0 && player.getBall().getGeometry().getWorldTranslation().distance(player.getGeometry().getWorldTranslation()) <= 2.5f){
+                try {    
+                    this.player.getBall().getPhysics().clearForces();
+                    this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
+                    this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
+                    this.player.getFisicas().clearForces();
+                    this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                    this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+                    this.player.setHasBall(true);
+
+                    Player pasar = player.getTeam().whoIsBetterToPassTheBall();
+
+                    passTraining.learn(pasar);
+                    //passTraining.useKnowledge(player.getTeam().whoIsBetterToPassTheBall());
+
+                    time_between_pass = 0.5f;
+                    System.out.println("paso la pelota " + pasar.getFilePasarName());
+                } catch (Exception ex) {
+                    Logger.getLogger(GoalkeeperController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }else if(time_between_pass >= 0f){
+                time_between_pass -= tpf;
+            }
+
+            /*
+            *       =========================================
+            *      ||               STOP BALL               ||
+            *       =========================================
+            */
+
+            if (predecir == false && instanteT <= 0) {
+                if (player.getBall().getGeometry().getWorldTranslation().distance(spatial.getWorldTranslation()) < 80) {
+                    if (porteria.getLeftPosition().x <= spatial.getWorldTranslation().x) {
+                        if (player.getBall().getGeometry().getWorldTranslation().x < spatial.getWorldTranslation().x) {
+                            derecha();
+                            derecha = true;
+                        }// else {
+    //                        player.getFisicas().clearForces();
+    //                        player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+    //                        player.getFisicas().setAngularDamping(0);
+                        //}
+                    }
+                    if (porteria.getRightPosition().x >= spatial.getWorldTranslation().x && !derecha) {
+                        if (player.getBall().getGeometry().getWorldTranslation().x > spatial.getWorldTranslation().x) {
+                            izquierda();
+                        } //else {
+    //                        player.getFisicas().clearForces();
+    //                        player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+    //                        player.getFisicas().setAngularDamping(0);
+                        //}
+                    }
+                    derecha = false;
+                    //spatial.lookAt(player.getBall().getGeometry().getWorldTranslation(), Vector3f.UNIT_Y);
+                }else{
+                    this.backToHome(tpf);
+                }
+            } else if (predecir == true) {
+                if (instanteT >= 0) {
+                    //player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                    Vector3f direccion = vector.subtract(spatial.getWorldTranslation());
+                    float distancia = vector.distance(spatial.getWorldTranslation());
+                    float velocidadRequerida = (distancia) / instanteT;
+                    //PREDICCION
+                    float fuerza; // = this.stopBallTraining.useKnowledge(vector.clone(), instanteT, tipoDisparo);
+                    if(vector.x <= porteria.getRightPosition().x+1 && vector.x >= porteria.getLeftPosition().x-1 && vector.y <= porteria.getHeight()+0.4f && vector.y >= 1.58f){
+                        if(tipoDisparo.equals(ShotType.BAJO)){
+                            fuerza = 500 * velocidadRequerida * 1.18f;
+                            player.getFisicas().applyImpulse(direccion.normalize().mult(fuerza), Vector3f.UNIT_Y);
+                        }else{
+                            fuerza = 600*velocidadRequerida;
+                            Vector3f dir = direccion.normalize().mult(fuerza);
+                            //dir.y+=500*2.5f;
+                            player.getFisicas().applyImpulse(direccion.normalize().mult(fuerza), Vector3f.UNIT_Y);
+                        }
+                        //APRENDIZAJE
+                        this.stopBallTraining.learn(vector.clone(), instanteT, tipoDisparo, fuerza);
+                    }
+                }
+                predecir = false;
+
+            } else if (predecir == false && instanteT > 0) {
+                instanteT -= tpf;
+            }
         
-        if(time_between_pass <= 0 && player.getBall().getGeometry().getWorldTranslation().distance(player.getGeometry().getWorldTranslation()) <= 2.5f){
-            try {    
-                this.player.getBall().getPhysics().clearForces();
-                this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
-                this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
+        }else{
                 this.player.getFisicas().clearForces();
                 this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
                 this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
-                this.player.setHasBall(true);
-                
-                Player pasar = player.getTeam().whoIsBetterToPassTheBall();
-                
-                passTraining.learn(pasar);
-                //passTraining.useKnowledge(player.getTeam().whoIsBetterToPassTheBall());
-                
-                time_between_pass = 0.5f;
-                System.out.println("paso la pelota " + pasar.getFilePasarName());
-            } catch (Exception ex) {
-                Logger.getLogger(GoalkeeperController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else if(time_between_pass >= 0f){
-            time_between_pass -= tpf;
-        }
-        
-        /*
-        *       =========================================
-        *      ||               STOP BALL               ||
-        *       =========================================
-        */
-        
-        if (predecir == false && instanteT <= 0) {
-            if (player.getBall().getGeometry().getWorldTranslation().distance(spatial.getWorldTranslation()) < 80) {
-                if (porteria.getLeftPosition().x <= spatial.getWorldTranslation().x) {
-                    if (player.getBall().getGeometry().getWorldTranslation().x < spatial.getWorldTranslation().x) {
-                        derecha();
-                        derecha = true;
-                    }// else {
-//                        player.getFisicas().clearForces();
-//                        player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-//                        player.getFisicas().setAngularDamping(0);
-                    //}
-                }
-                if (porteria.getRightPosition().x >= spatial.getWorldTranslation().x && !derecha) {
-                    if (player.getBall().getGeometry().getWorldTranslation().x > spatial.getWorldTranslation().x) {
-                        izquierda();
-                    } //else {
-//                        player.getFisicas().clearForces();
-//                        player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-//                        player.getFisicas().setAngularDamping(0);
-                    //}
-                }
-                derecha = false;
-                //spatial.lookAt(player.getBall().getGeometry().getWorldTranslation(), Vector3f.UNIT_Y);
-            }else{
-                this.backToHome(tpf);
-            }
-        } else if (predecir == true) {
-            if (instanteT >= 0) {
-                //player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-                Vector3f direccion = vector.subtract(spatial.getWorldTranslation());
-                float distancia = vector.distance(spatial.getWorldTranslation());
-                float velocidadRequerida = (distancia) / instanteT;
-                //PREDICCION
-                float fuerza; // = this.stopBallTraining.useKnowledge(vector.clone(), instanteT, tipoDisparo);
-                if(vector.x <= porteria.getRightPosition().x+1 && vector.x >= porteria.getLeftPosition().x-1 && vector.y <= porteria.getHeight()+0.4f && vector.y >= 1.58f){
-                    if(tipoDisparo.equals(ShotType.BAJO)){
-                        fuerza = 500 * velocidadRequerida * 1.18f;
-                        player.getFisicas().applyImpulse(direccion.normalize().mult(fuerza), Vector3f.UNIT_Y);
-                    }else{
-                        fuerza = 600*velocidadRequerida;
-                        Vector3f dir = direccion.normalize().mult(fuerza);
-                        //dir.y+=500*2.5f;
-                        player.getFisicas().applyImpulse(direccion.normalize().mult(fuerza), Vector3f.UNIT_Y);
-                    }
-                    //APRENDIZAJE
-                    this.stopBallTraining.learn(vector.clone(), instanteT, tipoDisparo, fuerza);
-                }
-            }
-            predecir = false;
-            
-        } else if (predecir == false && instanteT > 0) {
-            instanteT -= tpf;
-        }
-        
         
     }
 

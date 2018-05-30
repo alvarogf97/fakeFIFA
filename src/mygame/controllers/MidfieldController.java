@@ -40,58 +40,64 @@ public class MidfieldController extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
-        //Actualizo el tiempo para saber si tengo que ir a por la pelota o no
-        timeball += tpf;
+        if(!this.player.isPaused()){
+            //Actualizo el tiempo para saber si tengo que ir a por la pelota o no
+            timeball += tpf;
 
-        if (this.player.myTeamHaveBall()) {
-            timeball = 0;
-        }
+            if (this.player.myTeamHaveBall()) {
+                timeball = 0;
+            }
 
-        /*
-        *       =============================================================
-        *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
-        *       =============================================================
-         */
-        switch (this.player.getTactic()) {
-            case 0:
-                if (player.myTeamHaveBall()) {
-                    try {
-                        toDoInLiberoTacticWhithBall(tpf);
-                    } catch (Exception ex) {
-                        Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+            /*
+            *       =============================================================
+            *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
+            *       =============================================================
+             */
+            switch (this.player.getTactic()) {
+                case 0:
+                    if (player.myTeamHaveBall()) {
+                        try {
+                            toDoInLiberoTacticWhithBall(tpf);
+                        } catch (Exception ex) {
+                            Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        toDoInLiberoTacticWhithoutBall(tpf);
                     }
-                } else {
-                    toDoInLiberoTacticWhithoutBall(tpf);
-                }
-                break;
+                    break;
 
-            case 1:
-                if (player.myTeamHaveBall()) {
-                    try {
-                        toDoInStaccattoTacticWithBall(tpf);
-                    } catch (Exception ex) {
-                        Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                case 1:
+                    if (player.myTeamHaveBall()) {
+                        try {
+                            toDoInStaccattoTacticWithBall(tpf);
+                        } catch (Exception ex) {
+                            Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        toDoInStaccattoTacticWithoutBall(tpf);
                     }
-                } else {
-                    toDoInStaccattoTacticWithoutBall(tpf);
-                }
-                break;
+                    break;
 
-            case 2:
-                if (player.myTeamHaveBall()) {
-                    try {
-                        toDoInCatenachoTacticWithBall(tpf);
-                    } catch (Exception ex) {
-                        Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                case 2:
+                    if (player.myTeamHaveBall()) {
+                        try {
+                            toDoInCatenachoTacticWithBall(tpf);
+                        } catch (Exception ex) {
+                            Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        toDoInCatenachoTacticWithoutBall(tpf);
                     }
-                } else {
-                    toDoInCatenachoTacticWithoutBall(tpf);
-                }
-                break;
-            default:
-                backToHome(tpf);
-                break;
-        }
+                    break;
+                default:
+                    backToHome(tpf);
+                    break;
+            }
+        }else{
+                this.player.getFisicas().clearForces();
+                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+            }
     }
 
     @Override

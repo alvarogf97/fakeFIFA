@@ -31,24 +31,32 @@ public class BallController extends AbstractControl{
     @Override
     protected void controlUpdate(float tpf) {
         
-        if(!ball.isNeededRestart()){
-            CollisionResults results_front = new CollisionResults();
+        if(!this.ball.isPaused()){
         
-            ball.getGeometry().collideWith(ball.getGoalHelper().getGoal_front().getModelBound(), results_front);
-            if(results_front.size()>0){
-                ball.getMatcher().addGoalToFrontTeam();
-                ball.setNeededRestart(true);
+            if(!ball.isNeededRestart()){
+                CollisionResults results_front = new CollisionResults();
+
+                ball.getGeometry().collideWith(ball.getGoalHelper().getGoal_front().getModelBound(), results_front);
+                if(results_front.size()>0){
+                    ball.getMatcher().addGoalToFrontTeam();
+                    ball.setNeededRestart(true);
+                }
+
+                CollisionResults results_back = new CollisionResults();
+
+                ball.getGeometry().collideWith(ball.getGoalHelper().getGoal_back().getModelBound(), results_back);
+                if(results_back.size()>0){
+                    ball.getMatcher().addGoalToBackTeam();
+                    ball.setNeededRestart(true);
+                }
+            }else{
+                this.backToHome(tpf);
             }
 
-            CollisionResults results_back = new CollisionResults();
-
-            ball.getGeometry().collideWith(ball.getGoalHelper().getGoal_back().getModelBound(), results_back);
-            if(results_back.size()>0){
-                ball.getMatcher().addGoalToBackTeam();
-                ball.setNeededRestart(true);
-            }
         }else{
-            this.backToHome(tpf);
+            ball.getPhysics().clearForces();
+            ball.getPhysics().setLinearVelocity(Vector3f.ZERO);
+            ball.getPhysics().setAngularVelocity(Vector3f.ZERO);
         }
         
     }

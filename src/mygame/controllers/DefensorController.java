@@ -35,6 +35,7 @@ public class DefensorController extends AbstractControl{
     
     @Override
     protected void controlUpdate(float tpf) {
+        if(!this.player.isPaused()){
        /*
         *       =============================================================
         *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
@@ -77,6 +78,11 @@ public class DefensorController extends AbstractControl{
                     default: backToHome(tpf);
                              break;
                 }
+        }else{
+                this.player.getFisicas().clearForces();
+                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+            }
     }
 
     @Override

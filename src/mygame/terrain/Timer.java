@@ -25,11 +25,13 @@ public class Timer {
     private BitmapFont guiFont;
     private BitmapText text;
     private Node guiNode;
+    private boolean enabled;
     
     public Timer(AssetManager assetManager, AppSettings settings, Node guiNode){
         
         this.time = 0;
         this.guiNode = guiNode;
+        this.enabled = true;
         
         guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
         text = new BitmapText(guiFont, false);
@@ -45,13 +47,13 @@ public class Timer {
     
     public void addTime(float tpf){
         
-        this.time += tpf;
-        
-        int hours = (int)this.time / 3600;
-        int minutes = (int)(this.time % 3600) / 60;
-        int seconds = (int)this.time % 60;
-        text.setText("time: " + hours +":"+minutes+":"+seconds);
-        
+        if(this.isEnabled()){
+            this.time += tpf;
+            int hours = (int)this.time / 3600;
+            int minutes = (int)(this.time % 3600) / 60;
+            int seconds = (int)this.time % 60;
+            text.setText("time: " + hours +":"+minutes+":"+seconds);
+        }
     }
     
     public float getTime(){
@@ -61,5 +63,19 @@ public class Timer {
     public void dettachFromParent(){
         this.guiNode.detachChild(text);
     }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+    
+    public synchronized void pause(){
+        this.enabled = false;
+    }
+    
+    public synchronized void resume(){
+        this.enabled = true;
+    }
+    
+    
     
 }

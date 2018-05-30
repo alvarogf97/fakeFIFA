@@ -16,6 +16,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import java.util.Iterator;
 import java.util.Objects;
+import mygame.utils.StatesRecording;
 import mygame.utils.PlayerUtilities;
 
 /**
@@ -41,6 +42,8 @@ public abstract class Player {
     protected Vector3f [] directions;
     protected String filePasarName;
     protected String fileStopBall;
+    protected boolean paused;
+    protected StatesRecording state;
     
     
     protected Player(Material mat, Team team, Vector3f position, String filePasarName, String fileStopBall){
@@ -51,6 +54,8 @@ public abstract class Player {
         this.oponents = team.oponents; 
         this.mates = team.mates;
         this.ball = team.ball;
+        this.paused = false;
+        this.state = new StatesRecording();
         
         this.team = team;
         box = new Geometry(team.getTeamName(), new Box(1, 1, 1));
@@ -79,6 +84,8 @@ public abstract class Player {
         this.oponents = team.oponents; 
         this.mates = team.mates;
         this.ball = team.ball;
+        this.paused = false;
+        this.state = new StatesRecording();
         
         this.team = team;
         box = new Geometry(team.getTeamName(), new Box(1, 1, 1));
@@ -246,8 +253,22 @@ public abstract class Player {
             
     }
     
-     public String getFileStopBallName(){
+    public String getFileStopBallName(){
         return fileStopBall;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+    
+    public void pause(){
+        this.paused = true;
+        state.saveState(this);
+    }
+    
+    public void resume(){
+        this.paused = false;
+        state.restoreState(this);
     }
   
     

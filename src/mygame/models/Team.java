@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.concurrent.Semaphore;
 import mygame.shots.ShotType;
 import mygame.states.Libero;
-import mygame.states.Staccatto;
 import mygame.states.Tactic;
 import mygame.terrain.Goal;
 import mygame.terrain.Matcher;
@@ -270,6 +269,24 @@ public class Team {
         }else{
             this.ball.getTeam_A().goalkeeper.predict(type);
         }
+    }
+    
+    public void pauseTeam(){
+        this.defensor_left.pause();
+        this.defensor_right.pause();
+        this.goalkeeper.pause();
+        this.midfield.pause();
+        this.leading_left.pause();
+        this.leading_right.pause();
+    }
+    
+    public void resumeTeam(){
+        this.defensor_left.resume();
+        this.defensor_right.resume();
+        this.goalkeeper.resume();
+        this.midfield.resume();
+        this.leading_left.resume();
+        this.leading_right.resume();
     }
     
     

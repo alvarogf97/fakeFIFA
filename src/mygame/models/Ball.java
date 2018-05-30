@@ -14,6 +14,7 @@ import com.jme3.scene.shape.Sphere;
 import mygame.controllers.BallController;
 import mygame.terrain.GoalHelper;
 import mygame.terrain.Matcher;
+import mygame.utils.StatesRecording;
 
 /**
  *
@@ -34,16 +35,19 @@ public class Ball {
     private Node teamB;
     private Team team_A;
     private Team team_B;
+    private boolean paused;
+    private StatesRecording state;
     
     public Ball(Material mat, Vector3f position, GoalHelper goalHelper, Matcher matcher, Node teamA, Node teamB){
     
-        
+        this.paused = false;
         this.teamA = teamA;
         this.teamB = teamB;
         this.neededRestart = false;
         this.goalHelper = goalHelper;
         this.matcher = matcher;
         this.init_position = position;
+        this.state = new StatesRecording();
         
         spehere = new Geometry("ball", new Sphere(32, 32, 0.3f));
         spehere.setMaterial(mat);
@@ -128,6 +132,20 @@ public class Ball {
 
     public Team getTeam_B() {
         return team_B;
+    }
+    
+    public boolean isPaused(){
+        return this.paused;
+    }
+    
+    public void pause(){
+        this.paused = true;
+        state.saveState(this);
+    }
+    
+    public void resume(){
+        this.paused = false;
+        state.restoreState(this);
     }
     
     

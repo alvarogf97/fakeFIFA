@@ -48,70 +48,77 @@ public class LeadingController extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
+        
+        if(!this.player.isPaused()){
 
-        if (this.player.isRight()) {
-            companion = this.player.getTeam().getLeading_left();
-        } else {
-            companion = this.player.getTeam().getLeading_right();
-        }
-        middleCompanion = this.player.getTeam().getMidfield();
+            if (this.player.isRight()) {
+                companion = this.player.getTeam().getLeading_left();
+            } else {
+                companion = this.player.getTeam().getLeading_right();
+            }
+            middleCompanion = this.player.getTeam().getMidfield();
 
-        timeball += tpf;
+            timeball += tpf;
 
-        if (this.player.hasBall() || this.companion.hasBall()) {
-            timeball = 0;
-        }
+            if (this.player.hasBall() || this.companion.hasBall()) {
+                timeball = 0;
+            }
 
-        /*
-        *       =============================================================
-        *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
-        *       =============================================================
-         */
-        if (time_between_shot < 3) {
-            time_between_shot += tpf;
-        }
+            /*
+            *       =============================================================
+            *      ||       DECISIONES EN FUNCION DE LA TACTICA DEL EQUIPO      ||
+            *       =============================================================
+             */
+            if (time_between_shot < 3) {
+                time_between_shot += tpf;
+            }
 
-        switch (this.player.getTactic()) {
-            case 0:
-                if (player.myTeamHaveBall()) {
-                    try {
-                        toDoInLiberoTacticWhithBall(tpf);
-                    } catch (Exception ex) {
-                        Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+            switch (this.player.getTactic()) {
+                case 0:
+                    if (player.myTeamHaveBall()) {
+                        try {
+                            toDoInLiberoTacticWhithBall(tpf);
+                        } catch (Exception ex) {
+                            Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        toDoInLiberoTacticWhithoutBall(tpf);
                     }
-                } else {
-                    toDoInLiberoTacticWhithoutBall(tpf);
-                }
-                break;
+                    break;
 
-            case 1:
-                if (player.myTeamHaveBall()) {
-                    try {
-                        toDoInStaccattoTacticWithBall(tpf);
-                    } catch (Exception ex) {
-                        Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                case 1:
+                    if (player.myTeamHaveBall()) {
+                        try {
+                            toDoInStaccattoTacticWithBall(tpf);
+                        } catch (Exception ex) {
+                            Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        toDoInStaccattoTacticWithoutBall(tpf);
                     }
-                } else {
-                    toDoInStaccattoTacticWithoutBall(tpf);
-                }
-                break;
+                    break;
 
-            case 2:
-                if (player.myTeamHaveBall()) {
-                    try {
-                        toDoInCatenachoTacticWithBall(tpf);
-                    } catch (Exception ex) {
-                        Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                case 2:
+                    if (player.myTeamHaveBall()) {
+                        try {
+                            toDoInCatenachoTacticWithBall(tpf);
+                        } catch (Exception ex) {
+                            Logger.getLogger(DefensorController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } else {
+                        toDoInCatenachoTacticWithoutBall(tpf);
                     }
-                } else {
-                    toDoInCatenachoTacticWithoutBall(tpf);
-                }
-                break;
+                    break;
 
-            default:
-                backToHome(tpf);
-                break;
-        }
+                default:
+                    backToHome(tpf);
+                    break;
+            }
+        }else{
+                this.player.getFisicas().clearForces();
+                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+            }
     }
 
     @Override
