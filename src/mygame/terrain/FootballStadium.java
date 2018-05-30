@@ -71,7 +71,7 @@ public class FootballStadium {
         matInvisible.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         
         //Paredes EXTRA
-        /*
+        
         Geometry pared_front_1 = new Geometry("pared_front_1",new Box(ANCHO_CAMPO/2 -LARGO_PORTERIA/4,25,1));
         Geometry pared_back_1 = new Geometry("pared_front_1",new Box(ANCHO_CAMPO/2 -LARGO_PORTERIA/4,25,1)); 
         Geometry pared_front_2 = new Geometry("pared_front_1",new Box(ANCHO_CAMPO/2 -LARGO_PORTERIA/4,25,1));
@@ -103,7 +103,7 @@ public class FootballStadium {
         campoDeFutbol.attachChild(pared_front_2);campoDeFutbol.attachChild(pared_back_2);
         campoDeFutbol.attachChild(pared_front_lateral_1);campoDeFutbol.attachChild(pared_front_lateral_2);
         campoDeFutbol.attachChild(pared_back_lateral_1);campoDeFutbol.attachChild(pared_back_lateral_2);
-        */
+        
         //Paredes EXTRA
         
         Box b = new Box(ANCHO_CAMPO,25,1);

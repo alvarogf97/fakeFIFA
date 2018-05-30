@@ -24,7 +24,7 @@ import mygame.utils.PlayerUtilities;
  */
 public abstract class Player {
     
-    public static final int VELOCITY_TO_COME_BACK = 2500;
+    public static final int VELOCITY_TO_COME_BACK = 3000;
     public static final int MAX_LINEAR_VELOCITY = 10;
     public static final int ROUNDED_AREA = 2;
     public static final int PASAR_MIN = 5;

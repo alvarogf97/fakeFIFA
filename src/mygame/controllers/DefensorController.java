@@ -630,9 +630,9 @@ public class DefensorController extends AbstractControl{
                         Vector3f direction = player.getInitPosition().subtract(player.getGeometry().getWorldTranslation()).normalize();
                         if(PlayerUtilities.hasObstacle(this.player,direction)){
                             Vector3f esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x+10,0,0).normalize();
-                            player.getFisicas().setLinearVelocity(esquiva.mult(player.VELOCITY_TO_COME_BACK*tpf));
+                            player.getFisicas().setLinearVelocity(esquiva.mult(Player.VELOCITY_TO_COME_BACK*tpf));
                         }else{
-                           player.getFisicas().setLinearVelocity(direction.mult(player.VELOCITY_TO_COME_BACK*tpf)); 
+                           player.getFisicas().setLinearVelocity(direction.mult(Player.VELOCITY_TO_COME_BACK*tpf)); 
                         }
                     }else{
                         //la paramos

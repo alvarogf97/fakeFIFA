@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import mygame.models.Goalkeeper;
+import mygame.models.Player;
 import mygame.shots.ShotType;
 import mygame.states.Catenacho;
 import mygame.states.Libero;
@@ -22,6 +23,7 @@ import mygame.states.Staccatto;
 import mygame.terrain.Goal;
 import mygame.trainings.PassTraining;
 import mygame.trainings.StopBallTraining;
+import mygame.utils.PlayerUtilities;
 
 /**
  *
@@ -61,13 +63,15 @@ public class GoalkeeperController extends AbstractControl{
         *       =========================================
         */
         
-        if(player.getTeam().getTacticType() != 1 && player.getTeam().getTacticType() != 3 && player.getTeam().getOponentGoals() - player.getTeam().getMyGoals() >= 2){
+        if(player.getTeam().getTacticType() == 3){
+            this.backToHome(tpf);
+        }else if(player.getTeam().getTacticType() != 1 && player.getTeam().getTacticType() != 3 && player.getTeam().getOponentGoals() - player.getTeam().getMyGoals() >= 2){
             player.getTeam().setTactic(new Staccatto());
         }else if(player.getTeam().getTacticType() != 2 && player.getTeam().getTacticType() != 3 && player.getTeam().getMyGoals() - player.getTeam().getOponentGoals() >= 2){
             player.getTeam().setTactic(new Catenacho());
         }
         
-        if(player.getBall().isNeededRestart()){
+        if(restarted == true && player.getBall().isNeededRestart()){
             restarted = false;
             player.getTeam().setTactic(new Restarting());
         }
@@ -87,17 +91,29 @@ public class GoalkeeperController extends AbstractControl{
             *       =========================================
             */
         
-//        if(time_between_pass <= 0 && player.getBall().getGeometry().getWorldTranslation().distance(player.getGeometry().getWorldTranslation()) <= 2){
-//            try {    
-//                passTraining.learn(player.getTeam().whoIsBetterToPassTheBall());
-//                //passTraining.useKnowledge(player.getTeam().whoIsBetterToPassTheBall());
-//                time_between_pass = 0.5f;
-//            } catch (Exception ex) {
-//                Logger.getLogger(GoalkeeperController.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }else if(time_between_pass >= 0f){
-//            time_between_pass -= tpf;
-//        }
+        if(time_between_pass <= 0 && player.getBall().getGeometry().getWorldTranslation().distance(player.getGeometry().getWorldTranslation()) <= 2.5f){
+            try {    
+                this.player.getBall().getPhysics().clearForces();
+                this.player.getBall().getPhysics().setLinearVelocity(Vector3f.ZERO);
+                this.player.getBall().getPhysics().setAngularVelocity(Vector3f.ZERO);
+                this.player.getFisicas().clearForces();
+                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+                this.player.setHasBall(true);
+                
+                Player pasar = player.getTeam().whoIsBetterToPassTheBall();
+                
+                passTraining.learn(pasar);
+                //passTraining.useKnowledge(player.getTeam().whoIsBetterToPassTheBall());
+                
+                time_between_pass = 0.5f;
+                System.out.println("paso la pelota " + pasar.getFilePasarName());
+            } catch (Exception ex) {
+                Logger.getLogger(GoalkeeperController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else if(time_between_pass >= 0f){
+            time_between_pass -= tpf;
+        }
         
         /*
         *       =========================================
@@ -111,24 +127,29 @@ public class GoalkeeperController extends AbstractControl{
                     if (player.getBall().getGeometry().getWorldTranslation().x < spatial.getWorldTranslation().x) {
                         derecha();
                         derecha = true;
-                    } else {
-                        player.getFisicas().clearForces();
-                        player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-                    }
+                    }// else {
+//                        player.getFisicas().clearForces();
+//                        player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+//                        player.getFisicas().setAngularDamping(0);
+                    //}
                 }
                 if (porteria.getRightPosition().x >= spatial.getWorldTranslation().x && !derecha) {
                     if (player.getBall().getGeometry().getWorldTranslation().x > spatial.getWorldTranslation().x) {
                         izquierda();
-                    } else {
-                        player.getFisicas().clearForces();
-                        player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-                    }
+                    } //else {
+//                        player.getFisicas().clearForces();
+//                        player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+//                        player.getFisicas().setAngularDamping(0);
+                    //}
                 }
                 derecha = false;
                 //spatial.lookAt(player.getBall().getGeometry().getWorldTranslation(), Vector3f.UNIT_Y);
+            }else{
+                this.backToHome(tpf);
             }
         } else if (predecir == true) {
             if (instanteT >= 0) {
+                //player.getFisicas().setLinearVelocity(Vector3f.ZERO);
                 Vector3f direccion = vector.subtract(spatial.getWorldTranslation());
                 float distancia = vector.distance(spatial.getWorldTranslation());
                 float velocidadRequerida = (distancia) / instanteT;
@@ -141,7 +162,7 @@ public class GoalkeeperController extends AbstractControl{
                     }else{
                         fuerza = 600*velocidadRequerida;
                         Vector3f dir = direccion.normalize().mult(fuerza);
-                        dir.y+=500*2.5f;
+                        //dir.y+=500*2.5f;
                         player.getFisicas().applyImpulse(direccion.normalize().mult(fuerza), Vector3f.UNIT_Y);
                     }
                     //APRENDIZAJE
@@ -153,17 +174,19 @@ public class GoalkeeperController extends AbstractControl{
         } else if (predecir == false && instanteT > 0) {
             instanteT -= tpf;
         }
+        
+        
     }
 
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {}
     
     private void izquierda(){
-        player.getFisicas().applyCentralForce(new Vector3f(1450,0,0));
+        player.getFisicas().applyCentralForce(new Vector3f(1700,0,0));
     }
     
     private void derecha(){
-        player.getFisicas().applyCentralForce(new Vector3f(-1450,0,0));
+        player.getFisicas().applyCentralForce(new Vector3f(-1700,0,0));
     }
     
     public void predecirPosPelota(ShotType shot){
@@ -189,6 +212,22 @@ public class GoalkeeperController extends AbstractControl{
         System.out.println("EjeY de portero " + spatial.getWorldTranslation().y);
         if(vector.y < 1.58f){
             vector.y = 1.58f;
+        }
+    }
+    
+    private void backToHome(float tpf) {
+        if (!this.player.isInInitialPosition()) {
+            Vector3f direction = player.getInitPosition().subtract(player.getGeometry().getWorldTranslation()).normalize();
+            if (PlayerUtilities.hasObstacle(this.player, direction)) {
+                Vector3f esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x + 10, 0, 0).normalize();
+                player.getFisicas().setLinearVelocity(esquiva.mult(Player.VELOCITY_TO_COME_BACK * tpf));
+            } else {
+                player.getFisicas().setLinearVelocity(direction.mult(Player.VELOCITY_TO_COME_BACK * tpf));
+            }
+        } else {
+            //la paramos
+            player.getFisicas().clearForces();
+            player.getFisicas().setLinearVelocity(Vector3f.ZERO);
         }
     }
     
