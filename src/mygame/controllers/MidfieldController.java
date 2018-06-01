@@ -137,7 +137,7 @@ public class MidfieldController extends AbstractControl {
                 *      ||   SI NO, INTENTO ROBARLA SIEMPRE QUE PUEDA IR POR ELLA    ||
                 *       =============================================================
              */
-        } else if (canGoToBallInLibero()) {
+        } else if (canGoToBallInLibero() && this.estoyMasCerca()) {
             Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
             if (PlayerUtilities.hasObstacle(this.player, direction)) {
                 //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
@@ -330,7 +330,7 @@ public class MidfieldController extends AbstractControl {
                 *      ||   SI NO, INTENTO ROBARLA SIEMPRE QUE PUEDA IR POR ELLA    ||
                 *       =============================================================
              */
-        } else if (canGoToBallInStaccatto()) {
+        } else if (canGoToBallInStaccatto() && this.estoyMasCerca()) {
             Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
             if (PlayerUtilities.hasObstacle(this.player, direction)) {
                 //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
@@ -505,7 +505,7 @@ public class MidfieldController extends AbstractControl {
                 *      ||   SI NO, INTENTO ROBARLA SIEMPRE QUE PUEDA IR POR ELLA    ||
                 *       =============================================================
              */
-        } else if (canGoToBallInCatenacho()) {
+        } else if (canGoToBallInCatenacho() && this.estoyMasCerca()) {
             Vector3f direction = PlayerUtilities.WhereShouldIGo(player).subtract(this.player.getGeometry().getWorldTranslation()).normalize();
             if (PlayerUtilities.hasObstacle(this.player, direction)) {
                 //this.player.getFisicas().setLinearVelocity(this.player.getFisicas().getLinearVelocity().mult(0.75f));
@@ -740,5 +740,17 @@ public class MidfieldController extends AbstractControl {
     private boolean puedoChutar() {
         float dist = this.player.getTeam().getEnemyGoal().getMiddlePosition().distance(this.player.getGeometry().getWorldTranslation());
         return dist < 30;
+    }
+    
+    private boolean estoyMasCerca(){
+        Player left = this.player.getTeam().getLeading_left();
+        Player right = this.player.getTeam().getLeading_left();
+        
+        return estoyMasCercaPelota(left) && estoyMasCercaPelota(right);
+    }
+                
+    private boolean estoyMasCercaPelota(Player p){
+        return this.player.getGeometry().getWorldTranslation().distance(this.player.getBall().getGeometry().getWorldTranslation()) 
+                < p.getGeometry().getWorldTranslation().distance(this.player.getBall().getGeometry().getWorldTranslation());
     }
 }
