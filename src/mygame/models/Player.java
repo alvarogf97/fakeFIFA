@@ -271,12 +271,6 @@ public abstract class Player {
         state.restoreState(this);
     }
   
-    public float getBallDistance(){
-        return this.getGeometry().getWorldTranslation().distance(this.ball.getGeometry().getWorldTranslation());
-        
-      
-    }
-    
     
     
 }

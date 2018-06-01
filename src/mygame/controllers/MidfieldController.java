@@ -648,9 +648,9 @@ public class MidfieldController extends AbstractControl {
 
         if (this.player.getGeometry().getWorldTranslation().z < 75 && this.player.getGeometry().getWorldTranslation().z > -75 && !myteamhastheball2secs()) {
             if (this.player.getTeam().getTerrain() == 0) {
-                res = PlayerUtilities.WhereShouldIGo(player).z < 100 && PlayerUtilities.WhereShouldIGo(player).z > -75 && soyElMasCercano();
+                res = PlayerUtilities.WhereShouldIGo(player).z < 100 && PlayerUtilities.WhereShouldIGo(player).z > -75;
             } else {
-                res = PlayerUtilities.WhereShouldIGo(player).z > -100 && PlayerUtilities.WhereShouldIGo(player).z < 75 && soyElMasCercano();
+                res = PlayerUtilities.WhereShouldIGo(player).z > -100 && PlayerUtilities.WhereShouldIGo(player).z < 75;
             }
         }
 
@@ -658,16 +658,16 @@ public class MidfieldController extends AbstractControl {
     }
 
     private boolean canGoToBallInStaccatto() {
-        return !myteamhastheball2secs() && soyElMasCercano();
+        return !myteamhastheball2secs();
     }
 
     private boolean canGoToBallInCatenacho() {
         boolean res;
 
         if (this.player.getTeam().getTerrain() == 0) {
-            res = PlayerUtilities.WhereShouldIGo(player).z < 25 && soyElMasCercano()/*&& !myteamhastheball2secs()*/;
+            res = PlayerUtilities.WhereShouldIGo(player).z < 25 /*&& !myteamhastheball2secs()*/;
         } else {
-            res = PlayerUtilities.WhereShouldIGo(player).z > -25 && soyElMasCercano()/*&& !myteamhastheball2secs()*/;
+            res = PlayerUtilities.WhereShouldIGo(player).z > -25 && !myteamhastheball2secs();
         }
         return res;
     }
@@ -741,19 +741,4 @@ public class MidfieldController extends AbstractControl {
         float dist = this.player.getTeam().getEnemyGoal().getMiddlePosition().distance(this.player.getGeometry().getWorldTranslation());
         return dist < 30;
     }
-    
-    private boolean soyElMasCercano(){
-        float distanciaDelantero1=Math.abs(this.player.getTeam().getLeading_left().getBallDistance());
-        float distanciaDelantero2=Math.abs(this.player.getTeam().getLeading_right().getBallDistance());
-        float masCercano;
-        if(distanciaDelantero1<distanciaDelantero2){
-            masCercano=distanciaDelantero1;
-        }else{
-            masCercano=distanciaDelantero2;
-        }
-        
-        return Math.abs(this.player.getBallDistance())<masCercano || this.player.getTeam().getTerrain()==0 ? this.player.getBall().getGeometry().getWorldTranslation().z<=10 : this.player.getBall().getGeometry().getWorldTranslation().z>=10 ;
-    }
-    
-    
 }
