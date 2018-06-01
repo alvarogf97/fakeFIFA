@@ -301,12 +301,12 @@ public class LeadingController extends AbstractControl {
                         } else {
                             esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x - 10, 0, 0).normalize();
                         }
-                        this.player.getFisicas().applyCentralForce(esquiva.mult(6));
-                        this.player.getBall().getPhysics().applyImpulse(esquiva.mult(6), Vector3f.ZERO);
+                        this.player.getFisicas().applyCentralForce(esquiva.mult(7));
+                        this.player.getBall().getPhysics().applyImpulse(esquiva.mult(7), Vector3f.ZERO);
                     } else {
                         if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
-                            this.player.getFisicas().applyCentralForce(direction.mult(10));
-                            this.player.getBall().getPhysics().applyImpulse(direction.mult(6), Vector3f.ZERO);
+                            this.player.getFisicas().applyCentralForce(direction.mult(7));
+                            this.player.getBall().getPhysics().applyImpulse(direction.mult(7), Vector3f.ZERO);
                         }
                     }
                 }
@@ -636,12 +636,12 @@ public class LeadingController extends AbstractControl {
                         } else {
                             esquiva = new Vector3f(player.getGeometry().getWorldTranslation().x - 10, 0, 0).normalize();
                         }
-                        this.player.getFisicas().applyCentralForce(esquiva.mult(6));
-                        this.player.getBall().getPhysics().applyImpulse(esquiva.mult(6), Vector3f.ZERO);
+                        this.player.getFisicas().applyCentralForce(esquiva.mult(7));
+                        this.player.getBall().getPhysics().applyImpulse(esquiva.mult(7), Vector3f.ZERO);
                     } else {
                         if (Vector3fUtilities.module(this.player.getFisicas().getLinearVelocity()) < this.player.MAX_LINEAR_VELOCITY) {
-                            this.player.getFisicas().applyCentralForce(direction.mult(6));
-                            this.player.getBall().getPhysics().applyImpulse(direction.mult(6), Vector3f.ZERO);
+                            this.player.getFisicas().applyCentralForce(direction.mult(7));
+                            this.player.getBall().getPhysics().applyImpulse(direction.mult(7), Vector3f.ZERO);
                         }
                     }
                 }
