@@ -648,9 +648,11 @@ public class MidfieldController extends AbstractControl {
 
         if (this.player.getGeometry().getWorldTranslation().z < 75 && this.player.getGeometry().getWorldTranslation().z > -75 && !myteamhastheball2secs()) {
             if (this.player.getTeam().getTerrain() == 0) {
+
                 res = PlayerUtilities.WhereShouldIGo(player).z < 100 && PlayerUtilities.WhereShouldIGo(player).z > -75 && soyElMasCercano(20);
             } else {
                 res = PlayerUtilities.WhereShouldIGo(player).z > -100 && PlayerUtilities.WhereShouldIGo(player).z < 75 && soyElMasCercano(20);
+
             }
         }
 
@@ -658,16 +660,20 @@ public class MidfieldController extends AbstractControl {
     }
 
     private boolean canGoToBallInStaccatto() {
+
         return !myteamhastheball2secs() && soyElMasCercano(35);
+
     }
 
     private boolean canGoToBallInCatenacho() {
         boolean res;
 
         if (this.player.getTeam().getTerrain() == 0) {
+
             res = PlayerUtilities.WhereShouldIGo(player).z < 25 && soyElMasCercano(2)/*&& !myteamhastheball2secs()*/;
         } else {
             res = PlayerUtilities.WhereShouldIGo(player).z > -25 && soyElMasCercano(2)/*&& !myteamhastheball2secs()*/;
+
         }
         return res;
     }
@@ -741,6 +747,7 @@ public class MidfieldController extends AbstractControl {
         float dist = this.player.getTeam().getEnemyGoal().getMiddlePosition().distance(this.player.getGeometry().getWorldTranslation());
         return dist < 30;
     }
+
     
     private boolean soyElMasCercano(float dist){
         float distanciaDelantero1=Math.abs(this.player.getTeam().getLeading_left().getBallDistance());
@@ -756,4 +763,5 @@ public class MidfieldController extends AbstractControl {
     }
     
     
+
 }
