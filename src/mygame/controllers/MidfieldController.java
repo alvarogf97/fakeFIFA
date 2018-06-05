@@ -759,9 +759,10 @@ public class MidfieldController extends AbstractControl {
         boolean estoycerca = Math.abs(this.player.getBallDistance()) < masCercano;
         boolean estaenmicampo;
         if (this.player.getTeam().getTerrain() == 0) {
-            estaenmicampo = this.player.getBall().getGeometry().getWorldTranslation().z <= 100 && this.player.getBall().getGeometry().getWorldTranslation().z >= 2;
-        } else {
             estaenmicampo = this.player.getBall().getGeometry().getWorldTranslation().z >= -100 && this.player.getBall().getGeometry().getWorldTranslation().z <= 2;
+        } else {
+            estaenmicampo = this.player.getBall().getGeometry().getWorldTranslation().z <= 100 && this.player.getBall().getGeometry().getWorldTranslation().z >= 2;
+
         }
 
         return estoycerca || estaenmicampo;
