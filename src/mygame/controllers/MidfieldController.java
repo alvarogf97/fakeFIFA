@@ -28,7 +28,7 @@ import mygame.utils.Vector3fUtilities;
 public class MidfieldController extends AbstractControl {
 
     private float timeball = 5;
-    private float iveball=5;
+    private float iveball = 5;
     private Midfield player;
     private PassTraining passTraining;
     private ShootTraining shootTraining;
@@ -42,10 +42,10 @@ public class MidfieldController extends AbstractControl {
 
     @Override
     protected void controlUpdate(float tpf) {
-        if(!this.player.isPaused()){
+        if (!this.player.isPaused()) {
             //Actualizo el tiempo para saber si tengo que ir a por la pelota o no
             timeball += tpf;
-            iveball+=tpf;
+            iveball += tpf;
 
             if (this.player.myTeamHaveBall()) {
                 timeball = 0;
@@ -96,11 +96,11 @@ public class MidfieldController extends AbstractControl {
                     backToHome(tpf);
                     break;
             }
-        }else{
-                this.player.getFisicas().clearForces();
-                this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
-                this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
-            }
+        } else {
+            this.player.getFisicas().clearForces();
+            this.player.getFisicas().setLinearVelocity(Vector3f.ZERO);
+            this.player.getFisicas().setAngularVelocity(Vector3f.ZERO);
+        }
     }
 
     @Override
@@ -191,7 +191,7 @@ public class MidfieldController extends AbstractControl {
                 *       =============================================================
          */
         if (player.hasBall()) {
-            iveball=0;
+            iveball = 0;
             /*
                     *       =============================================================
                     *      ||          SI PIERDO LA PELOTA TENGO QUE DECIRLO            ||
@@ -228,12 +228,12 @@ public class MidfieldController extends AbstractControl {
                         this.shootTraining.useKnowledge(this.player.getTeam().getEnemyGoal());
 
                     }
-                    
+
                     /*
                                 *       =============================================================
                                 *      ||             SI DECIDO PASAR -> APRENDO A PASAR                  ||
                                 *       =============================================================
-                 */
+                     */
                 } else if (!pToPass.equals(this.player)) {
 
                     // para la fase de entrenamiento
@@ -386,7 +386,7 @@ public class MidfieldController extends AbstractControl {
                 *       =============================================================
          */
         if (player.hasBall()) {
-            iveball=0;
+            iveball = 0;
             /*
                     *       =============================================================
                     *      ||          SI PIERDO LA PELOTA TENGO QUE DECIRLO            ||
@@ -731,8 +731,8 @@ public class MidfieldController extends AbstractControl {
 
         return res;
     }
-    
-    private boolean iHaveTheBall2secs(){
+
+    private boolean iHaveTheBall2secs() {
         boolean res = false;
 
         if (iveball < 2) {
@@ -741,27 +741,30 @@ public class MidfieldController extends AbstractControl {
 
         return res;
     }
-    
 
     private boolean puedoChutar() {
         float dist = this.player.getTeam().getEnemyGoal().getMiddlePosition().distance(this.player.getGeometry().getWorldTranslation());
         return dist < 30;
     }
 
-    
-    private boolean soyElMasCercano(float dist){
-        float distanciaDelantero1=Math.abs(this.player.getTeam().getLeading_left().getBallDistance());
-        float distanciaDelantero2=Math.abs(this.player.getTeam().getLeading_right().getBallDistance());
+    private boolean soyElMasCercano(float dist) {
+        float distanciaDelantero1 = Math.abs(this.player.getTeam().getLeading_left().getBallDistance());
+        float distanciaDelantero2 = Math.abs(this.player.getTeam().getLeading_right().getBallDistance());
         float masCercano;
-        if(distanciaDelantero1<distanciaDelantero2){
-            masCercano=distanciaDelantero1;
-        }else{
-            masCercano=distanciaDelantero2;
+        if (distanciaDelantero1 < distanciaDelantero2) {
+            masCercano = distanciaDelantero1;
+        } else {
+            masCercano = distanciaDelantero2;
         }
-        
-        return Math.abs(this.player.getBallDistance())<masCercano || this.player.getTeam().getTerrain()==0 ? this.player.getBall().getGeometry().getWorldTranslation().z<=dist : this.player.getBall().getGeometry().getWorldTranslation().z>=-dist ;
+        boolean estoycerca = Math.abs(this.player.getBallDistance()) < masCercano;
+        boolean estaenmicampo;
+        if (this.player.getTeam().getTerrain() == 0) {
+            estaenmicampo = this.player.getBall().getGeometry().getWorldTranslation().z <= 100 && this.player.getBall().getGeometry().getWorldTranslation().z >= 2;
+        } else {
+            estaenmicampo = this.player.getBall().getGeometry().getWorldTranslation().z >= -100 && this.player.getBall().getGeometry().getWorldTranslation().z <= 2;
+        }
+
+        return estoycerca || estaenmicampo;
     }
-    
-    
 
 }
