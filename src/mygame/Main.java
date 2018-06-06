@@ -78,7 +78,7 @@ public class Main extends SimpleApplication {
         Material matBall = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         matBall.setTexture("DiffuseMap", assetManager.loadTexture("Materials/pelota.png"));
       
-        ball = new Ball(matBall, new Vector3f(0,1,30), goalHelper, matcher, teamANode, teamBNode);
+        ball = new Ball(matBall, new Vector3f(0,1,0), goalHelper, matcher, teamANode, teamBNode);
         states.getPhysicsSpace().add(ball.getPhysics());
         ball.getPhysics().setLinearDamping(0.15f);
         

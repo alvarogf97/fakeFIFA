@@ -19,8 +19,8 @@ public class Midfield extends Player{
     public Midfield(Material mat, Team team, Vector3f position, String filePasarName, String chutar) throws IOException {
         super(mat, team, position,filePasarName,null);
         fileChutarName=chutar;
-        //MidfieldController control= new MidfieldController(this);
-        //this.box.addControl(control);
+        MidfieldController control= new MidfieldController(this);
+        this.box.addControl(control);
     }
     
     public String getFileChutarName(){
