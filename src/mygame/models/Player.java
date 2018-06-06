@@ -192,8 +192,8 @@ public abstract class Player {
     
     public float getPropability(){
         return  
-                this.distToEnemyGoal(this.box.getWorldTranslation())*0.35f + 
-                this.getEnemyNumberIn10m(this.box.getWorldTranslation())*0.75f;
+                this.distToEnemyGoal(this.box.getWorldTranslation())*0.007f + 
+                this.getEnemyNumberIn10m(this.box.getWorldTranslation());
     }
     
     private float distToEnemyGoal(Vector3f position){
