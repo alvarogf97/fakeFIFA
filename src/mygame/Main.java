@@ -32,6 +32,7 @@ public class Main extends SimpleApplication {
     private Timer timer;
     private Matcher matcher;
     private boolean end = false;
+    private Ball ball;
 
     public static void main(String[] args) {
         Main app = new Main();
@@ -48,7 +49,6 @@ public class Main extends SimpleApplication {
         Node teamANode = new Node();
         Node teamBNode = new Node();
         Node teams = new Node();
-        Ball ball;
         
         /*
         *       =========================================
@@ -195,16 +195,19 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
-        if(timer !=null && timer.getTime()<=600){
+        
+        if(timer !=null && timer.getTime()<=60000){
             timer.addTime(tpf);
         }
         
-        if(timer !=null && timer.getTime()>600 && !end){
+        if(timer !=null && timer.getTime()>60000 && !end){
             rootNode.detachAllChildren();
             timer.dettachFromParent();
             matcher.finishGame();
             end = true;
         }
+        
+        cam.lookAt(this.ball.getGeometry().getWorldTranslation(), Vector3f.UNIT_Y);
     }
 
     @Override
