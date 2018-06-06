@@ -36,7 +36,7 @@ public class LeadingController extends AbstractControl {
     private Player companion;
     private Player middleCompanion;
     Vector3f middlePosition;
-    boolean aprendiendo = true;
+    boolean aprendiendo = false;
     float time_between_shot = 0;
 
     public LeadingController(Leading player) throws FileNotFoundException, IOException {

@@ -32,7 +32,7 @@ public class MidfieldController extends AbstractControl {
     private Midfield player;
     private PassTraining passTraining;
     private ShootTraining shootTraining;
-    private boolean aprendiendo = true;
+    private boolean aprendiendo = false;
 
     public MidfieldController(Midfield player) throws IOException, FileNotFoundException {
         this.player = player;
@@ -237,10 +237,10 @@ public class MidfieldController extends AbstractControl {
                 } else if (!pToPass.equals(this.player)) {
 
                     // para la fase de entrenamiento
-                    this.passTraining.learn(pToPass);
+                    //this.passTraining.learn(pToPass);
 
                     //funcionamiento entrenado
-                    //this.passTraining.useKnowledge(pToPass);
+                    this.passTraining.useKnowledge(pToPass);
                 }/*
                                 *       =============================================================
                                 *      ||                   SI DECIDO MOVERME                       ||
@@ -418,10 +418,10 @@ public class MidfieldController extends AbstractControl {
                 if (!pToPass.equals(this.player)) {
 
                     // para la fase de entrenamiento
-                    this.passTraining.learn(pToPass);
+                    //this.passTraining.learn(pToPass);
 
                     //funcionamiento entrenado
-                    //this.passTraining.useKnowledge(pToPass);
+                    this.passTraining.useKnowledge(pToPass);
                 } else if (puedoChutar()) {
                     if (aprendiendo) {
                         // para la fase de entrenamiento
@@ -578,7 +578,7 @@ public class MidfieldController extends AbstractControl {
                 if (!pToPass.equals(this.player)) {
 
                     // para la fase de entrenamiento
-                    this.passTraining.learn(pToPass);
+                    //this.passTraining.learn(pToPass);
 
                     //funcionamiento entrenado
                     this.passTraining.useKnowledge(pToPass);

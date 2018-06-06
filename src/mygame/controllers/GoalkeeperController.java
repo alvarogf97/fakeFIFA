@@ -116,8 +116,8 @@ public class GoalkeeperController extends AbstractControl{
 
                     Player pasar = player.getTeam().whoIsBetterToPassTheBall();
 
-                    passTraining.learn(pasar);
-                    //passTraining.useKnowledge(player.getTeam().whoIsBetterToPassTheBall());
+                    //passTraining.learn(pasar);
+                    passTraining.useKnowledge(player.getTeam().whoIsBetterToPassTheBall());
 
                     time_between_pass = 0.5f;
                 } catch (Exception ex) {
@@ -166,16 +166,16 @@ public class GoalkeeperController extends AbstractControl{
                     float distancia = vector.distance(spatial.getWorldTranslation());
                     float velocidadRequerida = (distancia) / instanteT;
                     //PREDICCION
-                    float fuerza; // = this.stopBallTraining.useKnowledge(vector.clone(), instanteT, tipoDisparo);
+                    float fuerza = 0; //= this.stopBallTraining.useKnowledge(vector.clone(), instanteT, tipoDisparo);
                     if(vector.x <= porteria.getRightPosition().x+1 && vector.x >= porteria.getLeftPosition().x-1 && vector.y <= porteria.getHeight()+0.4f && vector.y >= 1.58f){
                         if(tipoDisparo.equals(ShotType.BAJO)){
-                            fuerza = 500 * velocidadRequerida * 1.18f;
+                            fuerza = 470 * velocidadRequerida * 1.18f;
                             player.getFisicas().applyImpulse(direccion.normalize().mult(fuerza), Vector3f.UNIT_Y);
                         }else{
-                            fuerza = 600*velocidadRequerida;
+                            fuerza = 455*velocidadRequerida;
                             Vector3f dir = direccion.normalize().mult(fuerza);
-                            //dir.y+=500*2.5f;
-                            player.getFisicas().applyImpulse(direccion.normalize().mult(fuerza), Vector3f.UNIT_Y);
+                            dir.y-=500*0.2f;
+                            player.getFisicas().applyImpulse(dir, Vector3f.UNIT_Y);
                         }
                         //APRENDIZAJE
                         this.stopBallTraining.learn(vector.clone(), instanteT, tipoDisparo, fuerza);
