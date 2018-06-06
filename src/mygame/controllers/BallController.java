@@ -87,6 +87,7 @@ public class BallController extends AbstractControl{
                 //la paramos
                 ball.getPhysics().clearForces();
                 ball.getPhysics().setLinearVelocity(Vector3f.ZERO);
+                ball.getPhysics().setAngularVelocity(Vector3f.ZERO);
             }
     }
     
